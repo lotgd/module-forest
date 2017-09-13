@@ -1,0 +1,19 @@
+characters:
+    -
+        id: 1
+        name: "Gandalf"
+        displayName: "Gandalf the Grey"
+        maxHealth: 100
+        health: 90
+        level: 1
+        deletedAt:
+scenes:
+    -
+        id: 1
+        title: "Village"
+        description: "You arrive in a village."
+        template: 'lotgd/test/village'
+modules:
+    -
+        library: 'lotgd/test-module'
+        createdAt: 2016-08-22

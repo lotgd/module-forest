@@ -1,0 +1,32 @@
+{
+    "name": "lotgd/module-forest",
+    "description": "Starter code for your own custom LotGD module.",
+    "type": "lotgd-module",
+    "license": "AGPL-3.0",
+    "authors": [
+        {
+            "name": "Basilius Sauter",
+            "email": "basilius.sauter@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "LotGD\\Module\\Forest\\": "src/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://code.lot.gd"
+        }
+    ],
+    "require": {
+        "lotgd/core": "^0.3.0-alpha",
+        "lotgd/module-village": "^0.3.0-alpha",
+        "lotgd/module-new-day": "^0.3.0-alpha"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.1|^5.1",
+        "phpunit/dbunit": "*"
+    }
+}

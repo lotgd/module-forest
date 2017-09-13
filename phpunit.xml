@@ -1,0 +1,10 @@
+<phpunit bootstrap="vendor/autoload.php">
+    <php>
+        <env name="LOTGD_TESTS_CONFIG_PATH" value="./tests/lotgd.yml"/>
+    </php>
+    <testsuites>
+        <testsuite name="All">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
