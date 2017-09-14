@@ -11,9 +11,55 @@ scenes:
     -
         id: 1
         title: "Village"
-        description: "You arrive in a village."
-        template: 'lotgd/test/village'
+        description: "The village square hustles and bustles. No one really notices that you're are standing there. You see various shops and businesses along main street. There is a curious looking rock to one side. On every side the village is surrounded by deep dark forest."
+        template: 'lotgd/module-village/village'
+    -
+        id: 3
+        title: "It is a new day!"
+        description: "It is a new day."
+        template: "lotgd/module-new-day/newDay"
+    -
+        id: 4
+        title: "Continue"
+        description: "Continue."
+        template: "lotgd/module-new-day/restoration"
+scene_connections:
+    -
+        directionality: 1
+        outgoingConnectionGroupName:
+        incomingConnectionGroupName:
+        outgoingScene: 3
+        incomingScene: 4
+scene_connection_groups:
+  -
+    scene: 1
+    name: "lotgd/module-village/marketsquare"
+    title: "The Marketsquare"
+  -
+    scene: 1
+    name: "lotgd/module-village/residential"
+    title: "Residential District"
+  -
+    scene: 1
+    name: "lotgd/module-village/outside"
+    title: "Outside"
 modules:
     -
-        library: 'lotgd/test-module'
+        library: 'lotgd/module-new-day'
         createdAt: 2016-08-22
+    -
+        library: 'lotgd/module-village'
+        createdAt: 2016-08-22
+event_subscriptions:
+    -
+        pattern: "#h/lotgd/core/default-scene#"
+        class: "LotGD\\Module\\Village\\Module"
+        library: "lotgd/module-village"
+    -
+        pattern: "#h/lotgd/core/navigate-to/*#"
+        class: "LotGD\\Module\\NewDay\\Module"
+        library: "lotgd/module-new-day"
+    -
+        pattern: "#h/lotgd/core/navigate-to/lotgd/module-new-day/newDay#"
+        class: "LotGD\\Module\\Forest\\Module"
+        library: "lotgd/module-forest"

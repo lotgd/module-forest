@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e68bebee6a6dc8fc374eec56b733b343",
-    "content-hash": "4a2d1e7033453dab846aa519e0670b6f",
+    "hash": "bacb9233c602decc541419b5e68fb220",
+    "content-hash": "5a09fda9ba48ff909dd112f3514be53a",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1099,16 +1099,16 @@
         },
         {
             "name": "lotgd/core",
-            "version": "v0.3.2-alpha",
+            "version": "dev-feature/viewpoint-api",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lotgd/core.git",
-                "reference": "867843dddd9960f2c2b4f65b47ea5c72b0d48d42"
+                "reference": "adf4eeac5edc56ce7ef0d4f9deebf9e14cb7b07f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lotgd/core/zipball/867843dddd9960f2c2b4f65b47ea5c72b0d48d42",
-                "reference": "867843dddd9960f2c2b4f65b47ea5c72b0d48d42",
+                "url": "https://api.github.com/repos/lotgd/core/zipball/adf4eeac5edc56ce7ef0d4f9deebf9e14cb7b07f",
+                "reference": "adf4eeac5edc56ce7ef0d4f9deebf9e14cb7b07f",
                 "shasum": ""
             },
             "require": {
@@ -1141,14 +1141,14 @@
             ],
             "description": "Core functionality for Legend of the Green Dragon, a text-based RPG game.",
             "support": {
-                "source": "https://github.com/lotgd/core/tree/v0.3.1-alpha",
+                "source": "https://github.com/lotgd/core/tree/feature/viewpoint-api",
                 "issues": "https://github.com/lotgd/core/issues"
             },
-            "time": "2017-06-23 12:43:24"
+            "time": "2017-09-13 16:32:14"
         },
         {
             "name": "lotgd/module-new-day",
-            "version": "v0.3.2-alpha",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lotgd/module-new-day.git",
@@ -1193,7 +1193,7 @@
         },
         {
             "name": "lotgd/module-village",
-            "version": "v0.3.2-alpha",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lotgd/module-village.git",
@@ -3150,12 +3150,31 @@
             "time": "2016-11-23 20:04:58"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "v0.3.3-alpha",
+            "alias_normalized": "0.3.3.0-alpha",
+            "version": "dev-feature/viewpoint-api",
+            "package": "lotgd/core"
+        },
+        {
+            "alias": "v0.3.3-alpha",
+            "alias_normalized": "0.3.3.0-alpha",
+            "version": "9999999-dev",
+            "package": "lotgd/module-village"
+        },
+        {
+            "alias": "v0.3.3-alpha",
+            "alias_normalized": "0.3.3.0-alpha",
+            "version": "9999999-dev",
+            "package": "lotgd/module-new-day"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "lotgd/core": 15,
-        "lotgd/module-village": 15,
-        "lotgd/module-new-day": 15
+        "lotgd/core": 20,
+        "lotgd/module-village": 20,
+        "lotgd/module-new-day": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

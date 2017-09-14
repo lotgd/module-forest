@@ -7,6 +7,7 @@ use LotGD\Core\Game;
 use LotGD\Core\Events\EventContext;
 use LotGD\Core\Module as ModuleInterface;
 use LotGD\Core\Models\Module as ModuleModel;
+use LotGD\Core\Models\Scene;
 
 use LotGD\Module\Village\Module as VillageModule;
 use LotGD\Module\Forest\Scene\Forest;
@@ -17,6 +18,13 @@ class Module implements ModuleInterface {
 
     public static function handleEvent(Game $g, EventContext $context): EventContext
     {
+        $event = $context->getEvent();
+
+        switch($event) {
+            case "h/lotgd/core/navigate-to/lotgd/module-new-day/newDay":
+                $viewpoint = $context->getDataField("viewpoint");
+                $viewpoint->addDescriptionParagraph("You feel energized!");
+        }
         return $context;
     }
     
@@ -32,9 +40,9 @@ class Module implements ModuleInterface {
             if ($villageScene->hasConnectionGroup(VillageModule::Groups[0])) {
                 $villageScene
                     ->getConnectionGroup(VillageModule::Groups[0])
-                    ->connect($forestScene->getConnectionGroup(self::Groups["back"][0]));
+                    ->connect($forestScene->getConnectionGroup(Forest::Groups["back"][0]));
             } else {
-                $villageScene->connect($forestScene->getConnectionGroup(self::Groups["back"][0]));
+                $villageScene->connect($forestScene->getConnectionGroup(Forest::Groups["back"][0]));
             }
 
             $g->getEntityManager()->persist($forestScene);
@@ -43,6 +51,7 @@ class Module implements ModuleInterface {
 
         $g->getEntityManager()->flush();
     }
+
     public static function onUnregister(Game $g, ModuleModel $module)
     {
         // delete healer
