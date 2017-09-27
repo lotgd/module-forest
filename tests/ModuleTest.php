@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LotGD\Module\Forest\Tests;
 
+use LotGD\Module\Forest\Scenes\Fight;
 use Monolog\Logger;
 use Monolog\Handler\NullHandler;
 
@@ -50,28 +51,49 @@ class ModuleTest extends ModuleTestCase
         $descriptions = explode("\n\n", $v->getDescription());
         $this->assertContains("You feel energized!", $descriptions);
 
-        // Change viewpoint by taking an action - assert restored scene.
+        // Should be in the village
         $action = $v->getActionGroups()[0]->getActions()[0];
         $game->takeAction($action->getId());
         $this->assertSame("Village", $v->getTitle());
-
-        // Check if village is connected to forest
-        $groups = $v->getActionGroups();
-        $found = false;
-        foreach ($groups as $group) {
-            if ($group->getTitle() == "Outside") {
-                $actions = $group->getActions();
-                foreach ($actions as $action) {
-                    if ($action->getDestinationSceneId() == 5) {
-                        $found = $action->getId();
-                    }
-                }
-            }
-        }
-        $this->assertNotFalse($found);
+        $action = $this->assertHasAction($v, ["getDestinationSceneId", 5], "Outside");
 
         // Go to the forest
         $game->takeAction($action->getId());
         $this->assertSame("The Forest", $v->getTitle());
+        $action = $this->assertHasAction($v, ["getDestinationSceneId", 6], "Healing");
+        $this->assertHasAction($v, ["getTitle", "Search for a fight"], "Fight");
+
+        // Go to the healer.
+        $game->takeAction($action->getId());
+        $this->assertSame("Healer's Hut", $v->getTitle());
+        $action = $this->assertHasAction($v, ["getDestinationSceneId", 5], "Back");
+
+        // Back to the forest
+        $game->takeAction($action->getId());
+        $this->assertSame("The Forest", $v->getTitle());
+        $action = $this->assertHasAction($v, ["getTitle", "Search for a fight"], "Fight");
+
+        // Start a fight.
+        $game->takeAction($action->getId());
+        $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
+
+        // Attack
+        do {
+            $game->takeAction($action->getId());
+
+            if ($character->getProperty(Module::CharacterPropertyBattleState) !== null){
+                $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
+            } else {
+                break;
+            }
+        } while (true);
+
+        $this->assertSame("You won!", $v->getTitle());
+
+        // No go to healing.
+        $action = $this->assertHasAction($v, ["getDestinationSceneId", 6], "Healing");
+        $game->takeAction($action->getId());
+        $this->assertSame("Healer's Hut", $v->getTitle());
+        $action = $this->assertHasAction($v, ["getDestinationSceneId", 6], "Heal");
     }
 }

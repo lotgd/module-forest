@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace LotGD\Module\Forest\Scene;
+namespace LotGD\Module\Forest\Scenes;
 
 use LotGD\Core\Models\Scene;
 use LotGD\Core\Models\SceneConnectionGroup;

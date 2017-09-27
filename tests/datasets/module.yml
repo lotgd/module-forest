@@ -63,3 +63,7 @@ event_subscriptions:
         pattern: "#h/lotgd/core/navigate-to/lotgd/module-new-day/newDay#"
         class: "LotGD\\Module\\Forest\\Module"
         library: "lotgd/module-forest"
+    -
+        pattern: "#h/lotgd/core/navigate-to/lotgd/module-forest/forest#"
+        class: "LotGD\\Module\\Forest\\Module"
+        library: "lotgd/module-forest"

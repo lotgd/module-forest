@@ -1,0 +1,19 @@
+name	weapon	level	attack	defense	maxHealth
+Unicell	Celestial Mitosis	1	1	1	10
+Unicore	Celestial Growth	2	3	3	21
+Baby Unicorn	Celestial Cry	3	5	4	32
+Small Unicorn	Celestial Curiosity	4	7	6	43
+Teenage Unicorn	Celestial Arrogance	5	9	7	53
+Emo Unicorn	Celestial Depression	6	11	8	64
+Student Unicorn	Celestial Drunkenness	7	13	10	74
+Parent Unicorn	Celestial Care	8	15	11	84
+Teacher Unicorn	Celestial Punishment	9	17	13	94
+Star Unicorn	Celestial Connections	10	19	14	105
+Last Unicorn	Celestial Loneliness	11	21	15	115
+Dozen Unicorns	Celestial Teamwork	12	23	17	125
+Repairman Unicorn	Celestial Tools	13	25	18	135
+Manager Unicorn	Celestial Graphs	14	27	20	145
+Green Unicorn	Celestial Breath	15	29	21	155
+Professor Unicorn	Celestial Budget	16	31	22	166
+Elder Unicorn	Celestial Knowledge	17	33	23	177
+Dead Unicorn	Celestial Sickness	18	40	10	200
