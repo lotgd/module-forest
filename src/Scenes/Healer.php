@@ -64,7 +64,14 @@ class Healer
         /** @var Character $c */
         $c = $g->getCharacter();
 
-        if ($c->getHealth() < $c->getMaxHealth()) {
+        if ($c->isAlive() === false) {
+            $v->addDescriptionParagraph('"See you, I do.  Before you did see me, I think, hmm?" the old thing remarks.
+                "Know you, I do; healing you need. Willing to heal am I, but doing for you something I cannot."
+                
+                "Uh, um. Why?" you ask, ready to be rid of the smelly old thing.
+                
+                "Slain you were. Doing for the dead nothing I can. Leaving you must."');
+        } elseif ($c->getHealth() < $c->getMaxHealth()) {
             $healActions = [
                 new Action($v->getScene()->getId(), "Complete Healing", ["healing" => "all"]),
             ];

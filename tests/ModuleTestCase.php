@@ -75,7 +75,29 @@ class ModuleTestCase extends ModelTestCase
         }
     }
 
-    protected function assertHasAction(Viewpoint $viewpoint, array $actionParams, ?string $groupTitle = null): Action
+    protected function takeActions(Game $game, Viewpoint $viewpoint, array $actions)
+    {
+        foreach ($actions as $action) {
+            if (is_int($action)) {
+                $searchFor = "getDestinationSceneId";
+            } elseif (is_string($action)) {
+                $searchFor = "getTitle";
+            } else {
+                throw new \Exception("\$actions parameter must be a list containing integers or strings.");
+            }
+
+            foreach ($viewpoint->getActionGroups() as $group) {
+                foreach ($group->getActions() as $a) {
+                    if ($a->$searchFor() == $action) {
+                        $game->takeAction($a->getId());
+                        break 2;
+                    }
+                }
+            }
+        }
+    }
+
+    protected function searchAction(Viewpoint $viewpoint, array $actionParams, ?string $groupTitle = null): ?Action
     {
         if (count($actionParams) != 2) {
             throw new ArgumentException("$actionParams is expected to be an array of exactly 2 items.");
@@ -91,7 +113,7 @@ class ModuleTestCase extends ModelTestCase
 
 
         $groups = $viewpoint->getActionGroups();
-        $found = false;
+        $found = null;
 
         foreach ($groups as $group) {
             $actions = $group->getActions();
@@ -109,7 +131,19 @@ class ModuleTestCase extends ModelTestCase
             }
         }
 
-        $this->assertNotFalse($found);
         return $found;
+    }
+
+    protected function assertNotHasAction(Viewpoint $viewpoint, array $actionParams, ?string $groupTitle = null): void
+    {
+        $action = $this->searchAction($viewpoint, $actionParams, $groupTitle);
+        $this->assertNull($action);
+    }
+
+    protected function assertHasAction(Viewpoint $viewpoint, array $actionParams, ?string $groupTitle = null): Action
+    {
+        $action = $this->searchAction($viewpoint, $actionParams, $groupTitle);
+        $this->assertNotNull($action);
+        return $action;
     }
 }

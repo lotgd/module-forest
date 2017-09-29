@@ -20,6 +20,7 @@ const MODULE = "lotgd/module-forest";
 class Module implements ModuleInterface {
     const ModuleIdentifier = MODULE;
     const CharacterPropertyBattleState = MODULE . "/battleState";
+    const CharacterPropertyTurns = MODULE . "/turns";
 
     public static function handleEvent(Game $g, EventContext $context): EventContext
     {
@@ -27,8 +28,15 @@ class Module implements ModuleInterface {
 
         switch($event) {
             case "h/lotgd/core/navigate-to/lotgd/module-new-day/newDay":
+                $turns = 20;
                 $viewpoint = $context->getDataField("viewpoint");
-                $viewpoint->addDescriptionParagraph("You feel energized!");
+
+                $viewpoint->addDescriptionParagraph(
+                    sprintf("You feel energized! Today, you can fight for %s rounds.", $turns)
+                );
+
+                $g->getCharacter()->setProperty(self::CharacterPropertyTurns, $turns);
+                $g->getCharacter()->setHealth($g->getCharacter()->getMaxHealth());
                 break;
             case "h/lotgd/core/navigate-to/" . Forest::Template:
                 $context = Forest::handleEvent($g, $context);

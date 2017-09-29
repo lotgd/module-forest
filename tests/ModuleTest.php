@@ -5,6 +5,7 @@ namespace LotGD\Module\Forest\Tests;
 
 use LotGD\Core\Events\EventContext;
 use LotGD\Core\Events\EventContextData;
+use LotGD\Core\Models\Scene;
 use LotGD\Module\Forest\Scenes\Fight;
 use Monolog\Logger;
 use Monolog\Handler\NullHandler;
@@ -51,7 +52,9 @@ class ModuleTest extends ModuleTestCase
 
         // Assert that our new day inserts work
         $descriptions = explode("\n\n", $v->getDescription());
-        $this->assertContains("You feel energized!", $descriptions);
+        $this->assertContains("You feel energized! Today, you can fight for 20 rounds.", $descriptions);
+        $this->assertSame($character->getMaxHealth(), $character->getHealth());
+        $character->setHealth(90);
 
         // Should be in the village
         $action = $v->getActionGroups()[0]->getActions()[0];
@@ -103,6 +106,60 @@ class ModuleTest extends ModuleTestCase
         $game->takeAction($action->getId());
         // Assert we are.
         $this->assertEquals($character->getMaxHealth(), $character->getHealth());
+    }
 
+    public function testIfHealingOptionsAreOnlyVisibleToDamagedCharacters()
+    {
+        /** @var Game $game */
+        $game = $this->g;
+        /** @var Character $character */
+        $character = $this->getEntityManager()->getRepository(Character::class)->find(2);
+        $character->setProperty(\LotGD\Module\NewDay\Module::CharacterPropertyLastNewDay, new \DateTime());
+        $game->setCharacter($character);
+        $v = $game->getViewpoint();
+
+        // Take actions
+        $this->takeActions($game, $v, [5, 6]);
+        $this->assertHasAction($v, ["getTitle", "Complete Healing"], "Potions");
+
+        // Heal, go back and return
+        $character->setHealth($character->getMaxHealth());
+        $this->takeActions($game, $v, [5, 6]);
+        $this->assertNotHasAction($v, ["getTitle", "Complete Healing"], "Potions");
+    }
+
+    public function testIfHealerSuccessfullyRemovesHealthAboveMaximum()
+    {
+        /** @var Game $game */
+        $game = $this->g;
+        /** @var Character $character */
+        $character = $this->getEntityManager()->getRepository(Character::class)->find(3);
+        $character->setProperty(\LotGD\Module\NewDay\Module::CharacterPropertyLastNewDay, new \DateTime());
+        $game->setCharacter($character);
+        $v = $game->getViewpoint();
+
+        // Take actions
+        $this->assertGreaterThan($character->getMaxHealth(), $character->getHealth());
+        $this->takeActions($game, $v, [5, 6]);
+        $this->assertNotHasAction($v, ["getTitle", "Complete Healing"], "Potions");
+        $this->assertSame($character->getMaxHealth(), $character->getHealth());
+    }
+
+    public function testIfDeadPeopleCannotFightOrHeal()
+    {
+        /** @var Game $game */
+        $game = $this->g;
+        /** @var Character $character */
+        $character = $this->getEntityManager()->getRepository(Character::class)->find(4);
+        $character->setProperty(\LotGD\Module\NewDay\Module::CharacterPropertyLastNewDay, new \DateTime());
+        $game->setCharacter($character);
+        $v = $game->getViewpoint();
+
+        // Take actions
+        $this->assertSame(0, $character->getHealth());
+        $this->takeActions($game, $v, [5]);
+        $this->assertNotHasAction($v, ["getTitle", "Search for a fight"], "Fight");
+        $this->takeActions($game, $v, [6]);
+        $this->assertNotHasAction($v, ["getTitle", "Complete Healing"], "Potions");
     }
 }
