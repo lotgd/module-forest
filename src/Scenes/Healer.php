@@ -12,6 +12,11 @@ use LotGD\Core\Models\Scene;
 use LotGD\Core\Models\SceneConnectionGroup;
 use LotGD\Core\Models\Viewpoint;
 
+/**
+ * Handles Scenes related to the Healer's Hut
+ * Class Healer
+ * @package LotGD\Module\Forest\Scenes
+ */
 class Healer
 {
     const Template = "lotgd/module-forest/healer";
@@ -20,6 +25,10 @@ class Healer
         "back" => ["lotgd/module-forest/healer/back", "Back"],
     ];
 
+    /**
+     * Creates a Healer's Hut scene.
+     * @return Scene
+     */
     public static function create(): Scene
     {
         $scene = Scene::create([
@@ -57,6 +66,12 @@ class Healer
         }
     }
 
+    /**
+     * Handles the scene if no healing option has been selected.
+     * @param Game $g
+     * @param EventContext $context
+     * @return EventContext
+     */
     protected static function handleMainScene(Game $g, EventContext $context): EventContext
     {
         /** @var Viewpoint $v */
@@ -120,6 +135,12 @@ class Healer
         return $context;
     }
 
+    /**
+     * Handles the scene of a healing option has been selected.
+     * @param Game $g
+     * @param EventContext $context
+     * @return EventContext
+     */
     protected static function handleHealScene(Game $g, EventContext $context): EventContext
     {
         /** @var Viewpoint $v */

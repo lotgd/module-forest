@@ -67,6 +67,8 @@ class ModuleTest extends ModuleTestCase
         $this->assertSame("The Forest", $v->getTitle());
         $action = $this->assertHasAction($v, ["getDestinationSceneId", 6], "Healing");
         $this->assertHasAction($v, ["getTitle", "Search for a fight"], "Fight");
+        $this->assertHasAction($v, ["getTitle", "Go Thrillseeking"], "Fight");
+        $this->assertHasAction($v, ["getTitle", "Go Slumming"], "Fight");
 
         // Go to the healer.
         $game->takeAction($action->getId());
@@ -161,5 +163,40 @@ class ModuleTest extends ModuleTestCase
         $this->assertNotHasAction($v, ["getTitle", "Search for a fight"], "Fight");
         $this->takeActions($game, $v, [6]);
         $this->assertNotHasAction($v, ["getTitle", "Complete Healing"], "Potions");
+    }
+
+    public function testIfAForestFightEndsProperlyIfTheCharacterDied()
+    {
+        /** @var Game $game */
+        $game = $this->g;
+        /** @var Character $character */
+        $character = $this->getEntityManager()->getRepository(Character::class)->find(5);
+        $character->setProperty(\LotGD\Module\NewDay\Module::CharacterPropertyLastNewDay, new \DateTime());
+        $game->setCharacter($character);
+        $v = $game->getViewpoint();
+
+        // Take actions
+        $this->assertSame(1, $character->getHealth());
+        $this->takeActions($game, $v, [5, "Go Thrillseeking"]);
+        $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
+
+        // Attack until someone dies.
+        // Make sure we die.
+        $character->setLevel(1);
+        do {
+            $game->takeAction($action->getId());
+
+            if ($character->getProperty(Module::CharacterPropertyBattleState) !== null){
+                $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
+            } else {
+                break;
+            }
+        } while (true);
+
+        $this->assertSame("You died!", $v->getTitle());
+        $this->assertNotHasAction($v, ["getTitle", "Search for a fight"], "Fight");
+        $this->assertNotHasAction($v, ["getTitle", "Go Thrillseeking"], "Fight");
+        $this->assertNotHasAction($v, ["getTitle", "Go Slumming"], "Fight");
+        $this->assertHasAction($v, ["getDestinationSceneId", 1], "Fight");
     }
 }

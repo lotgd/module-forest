@@ -6,6 +6,10 @@ namespace LotGD\Module\Forest\Managers;
 use LotGD\Core\Game;
 use LotGD\Module\Forest\Models\Creature;
 
+/**
+ * Class CreatureManager. This class offers an easy api for getting a randomized creature from the database with a selected level.
+ * @package LotGD\Module\Forest\Managers
+ */
 class CreatureManager
 {
     private $game;
@@ -19,6 +23,13 @@ class CreatureManager
         $this->game = $game;
     }
 
+    /**
+     * Returns a possibly random creature for a certain level.
+     * @param int $level
+     * @param int $difficulty
+     * @param bool $randomizeLevel
+     * @return Creature
+     */
     public function getCreature(int $level, int $difficulty = self::FightDifficultyNormal, bool $randomizeLevel = True): Creature
     {
         switch($difficulty) {
@@ -46,11 +57,24 @@ class CreatureManager
         $creatures = $this->game->getEntityManager()->getRepository(Creature::class)
             ->findBy(["level" => $level]);
 
-        // @ToDo: Create a dummy creature in case there are none.
-        $creature = $creatures[$this->game->getDiceBag()->dice(1, count($creatures)) - 1];
+        if (count($creatures) === 0) {
+            $character = $this->game->getCharacter();
+            $creature = new Creature();
+            $creature->setName(sprintf("%s's evil Doppelganger"));
+            $creature->setWeapon("Evil aura");
+            $creature->setAttack($character->getAttack($this->game));
+            $creature->setDefense($character->getDefense($this->game));
+            $creature->setLevel($character->getLevel());
+            $creature->setMaxHealth($character->getMaxHealth());
+            $creature->setHealth($creature->getMaxHealth());
 
-        // Detach the creature: User is fighting against a clone of the creature with it's own health pool, possibly upscaled
-        $this->game->getEntityManager()->detach($creature);
+            // No detaching needed since it is new.
+        } else {
+            $creature = $creatures[$this->game->getDiceBag()->dice(1, count($creatures)) - 1];
+
+            // Detach the creature: User is fighting against a clone of the creature with it's own health pool, possibly upscaled
+            $this->game->getEntityManager()->detach($creature);
+        }
 
         return $creature;
     }

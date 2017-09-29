@@ -5,7 +5,7 @@ characters:
         displayName: "Gandalf the Grey"
         maxHealth: 100
         health: 90
-        level: 1
+        level: 2
         deletedAt:
     -
         id: 2
@@ -30,6 +30,14 @@ characters:
         maxHealth: 10
         health: 0
         level: 1
+        deletedAt:
+    -
+        id: 5
+        name: "Denethor"
+        displayName: "Steward Boromir"
+        maxHealth: 100
+        health: 1
+        level: 10
         deletedAt:
 scenes:
     -

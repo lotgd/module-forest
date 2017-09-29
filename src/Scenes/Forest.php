@@ -16,6 +16,7 @@ use LotGD\Core\Models\SceneConnectionGroup;
 use LotGD\Core\Models\Viewpoint;
 
 use LotGD\Module\Forest\Managers\CreatureManager;
+use LotGD\Module\Forest\Models\Creature;
 use LotGD\Module\Forest\Module as ForestModule;
 
 /**
@@ -89,13 +90,20 @@ class Forest
         // Add an action for fighting - if enough healthpoints
 
         if ($c->isAlive()) {
-            $fightAction = new Action($forestid, "Search for a fight", ["search" => CreatureManager::FightDifficultyNormal]);
+            $fightAction = [new Action($forestid, "Search for a fight", ["search" => CreatureManager::FightDifficultyNormal])];
+
+            if ($c->getLevel() > 1) {
+                $fightAction[] = new Action($forestid, "Go Slumming", ["search" => CreatureManager::FightDifficultyEasy]);
+            }
+            $fightAction[] = new Action($forestid, "Go Thrillseeking", ["search" => CreatureManager::FightDifficultyHard]);
 
             if ($v->hasActionGroup(self::Groups["fight"][0])) {
-                $v->addActionToGroupId($fightAction, self::Groups["fight"][0]);
+                foreach ($fightActions as $action) {
+                    $v->addActionToGroupId($fightAction, self::Groups["fight"][0]);
+                }
             } else {
                 $group = new ActionGroup(self::Groups["fight"][0], self::Groups["fight"][1], 0);
-                $group->addAction($fightAction);
+                $group->setActions($fightAction);
                 $v->addActionGroup($group);
             }
         }
@@ -117,10 +125,33 @@ class Forest
         $creature = $creatureManager->getCreature($c->getLevel(), $context->getDataField("parameters")["search"]);
 
         // @ToDo: Allow normal fight, monster is surprised and player is surprised.
-        $v->setDescription(sprintf(
-            "You are strolling through the forest, trying to find a creature to kill. You encounter a 
-            %s that attacks you with its weapon %s."
-        , $creature->getDisplayName(), $creature->getAttack($g)));
+        $v->setTitle("A fight!");
+
+        switch($context->getDataField("parameters")["search"]) {
+            case CreatureManager::FightDifficultyEasy:
+                $v->setDescription(sprintf(
+                        "You head for the section of forest you know to contain foes that you're a bit more 
+                        comfortable with. You encounter a %s that attacks you with its weapon %s.",
+                        $creature->getDisplayName(), $creature->getWeapon($g))
+                );
+                break;
+
+            case CreatureManager::FightDifficultyHard:
+                $v->setDescription(sprintf(
+                        "You head for the section of forest which contains creatures of your nightmares, hoping 
+                        to find one of them injured. You encounter a %s that attacks you with its weapon %s.",
+                        $creature->getDisplayName(), $creature->getWeapon($g))
+                );
+                break;
+
+            case CreatureManager::FightDifficultyNormal:
+                $v->setDescription(sprintf(
+                    "You are strolling through the forest, trying to find a creature to kill. You encounter a 
+                        %s that attacks you with its weapon %s.",
+                    $creature->getDisplayName(), $creature->getWeapon($g))
+                );
+                break;
+        }
 
         $battle = new Battle($g, $c, $creature);
 
@@ -158,11 +189,11 @@ class Forest
             if ($battle->getWinner() === $c) {
                 $v->setTitle("You won!");
 
-                $v->addDescriptionParagraph(sprintf("You defeated {}. You gain no experience.", $battle->getLoser()->getDisplayName()));
+                $v->addDescriptionParagraph(sprintf("You defeated %s. You gain no experience.", $battle->getLoser()->getDisplayName()));
             } else {
                 $v->setTitle("You died!");
 
-                $v->addDescriptionParagraph(sprintf("You haven defeated by {}. They stand over your dead body, laughting..", $battle->getWinner()->getDisplayName()));
+                $v->addDescriptionParagraph(sprintf("You haven defeated by %s. They stand over your dead body, laughting..", $battle->getWinner()->getDisplayName()));
             }
 
             $c->setProperty(ForestModule::CharacterPropertyBattleState, null);

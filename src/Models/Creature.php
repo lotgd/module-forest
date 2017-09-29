@@ -51,51 +51,95 @@ class Creature extends BasicEnemy implements CreateableInterface
         $this->bufflist = new BuffList(new ArrayCollection());
     }
 
+    /**
+     * Sets the name of the creature
+     * @param string $name
+     */
     public function setName(string $name)
     {
         $this->name = $name;
     }
 
+    /**
+     * Gives the name of the current creature.
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * Sets the level of a creature.
+     * @param int $level
+     */
     public function setLevel(int $level)
     {
         $this->level = $level;
     }
 
+    /**
+     * Returns the base attack level of the creature.
+     * @param int $attack
+     */
     public function setAttack(int $attack)
     {
         $this->attack = $attack;
     }
 
+    /**
+     * Returns the attack value of a creature, possibly changed by events.
+     * @param Game $game
+     * @param bool $ignoreBuffs
+     * @return int
+     */
     public function getAttack(Game $game, bool $ignoreBuffs = false): int
     {
         return $this->attack;
     }
 
+    /**
+     * Sets the base defense level of the creature.
+     * @param int $defense
+     */
     public function setDefense(int $defense)
     {
         $this->defense = $defense;
     }
 
+    /**
+     * Returns the defense value of the creature, possibly changed by events.
+     * @param Game $game
+     * @param bool $ignoreBuffs
+     * @return int
+     */
     public function getDefense(Game $game, bool $ignoreBuffs = false): int
     {
         return $this->defense;
     }
 
+    /**
+     * Sets the maximum health value of the creature.
+     * @param int $maxHealth
+     */
     public function setMaxHealth(int $maxHealth): void
     {
         $this->maxHealth = $maxHealth;
     }
 
+    /**
+     * Returns the maximum health value of the creature.
+     * @return int
+     */
     public function getMaxHealth(): int
     {
         return $this->maxHealth;
     }
 
+    /**
+     * Returns a list of buffs this creature might have.
+     * @return BuffList
+     */
     public function getBuffs(): BuffList
     {
         if (empty($this->bufflist)) {
@@ -104,11 +148,19 @@ class Creature extends BasicEnemy implements CreateableInterface
         return $this->bufflist;
     }
 
+    /**
+     * Sets the weapon name.
+     * @param string $weapon
+     */
     public function setWeapon(string $weapon)
     {
         $this->weapon = $weapon;
     }
 
+    /**
+     * Returns the weapon name.
+     * @return string
+     */
     public function getWeapon(): string
     {
         return $this->weapon;
