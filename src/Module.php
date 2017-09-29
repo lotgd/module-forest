@@ -19,12 +19,12 @@ const MODULE = "lotgd/module-forest";
 
 class Module implements ModuleInterface {
     const ModuleIdentifier = MODULE;
-    const CharacterPropertyForestId = MODULE . "/forestId";
     const CharacterPropertyBattleState = MODULE . "/battleState";
 
     public static function handleEvent(Game $g, EventContext $context): EventContext
     {
         $event = $context->getEvent();
+
         switch($event) {
             case "h/lotgd/core/navigate-to/lotgd/module-new-day/newDay":
                 $viewpoint = $context->getDataField("viewpoint");
@@ -32,6 +32,9 @@ class Module implements ModuleInterface {
                 break;
             case "h/lotgd/core/navigate-to/" . Forest::Template:
                 $context = Forest::handleEvent($g, $context);
+                break;
+            case "h/lotgd/core/navigate-to/" . Healer::Template:
+                $context = Healer::handleEvent($g, $context);
                 break;
         }
         

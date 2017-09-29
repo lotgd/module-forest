@@ -86,12 +86,9 @@ class Forest
 
         $forestid = $v->getScene()->getId();
 
-        // Set the current forest id
-        $c->setProperty(ForestModule::CharacterPropertyForestId, $forestid);
-
         // Add an action for fighting - if enough healthpoints
 
-        if ($c->getHealth() > 0) {
+        if ($c->isAlive()) {
             $fightAction = new Action($forestid, "Search for a fight", ["search" => CreatureManager::FightDifficultyNormal]);
 
             if ($v->hasActionGroup(self::Groups["fight"][0])) {

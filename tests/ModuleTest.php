@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace LotGD\Module\Forest\Tests;
 
+use LotGD\Core\Events\EventContext;
+use LotGD\Core\Events\EventContextData;
 use LotGD\Module\Forest\Scenes\Fight;
 use Monolog\Logger;
 use Monolog\Handler\NullHandler;
@@ -26,16 +28,16 @@ class ModuleTest extends ModuleTestCase
     public function testHandleUnknownEvent()
     {
         // Always good to test a non-existing event just to make sure nothing happens :).
-        $context = new \LotGD\Core\Events\EventContext(
+        $context = new EventContext(
             "e/lotgd/tests/unknown-event",
             "none",
-            \LotGD\Core\Events\EventContextData::create([])
+            EventContextData::create([])
         );
 
         Module::handleEvent($this->g, $context);
     }
 
-    public function testModuleFlow()
+    public function testModuleFlowWhileCharacterStaysAlive()
     {
         /** @var Game $game */
         $game = $this->g;
@@ -77,7 +79,7 @@ class ModuleTest extends ModuleTestCase
         $game->takeAction($action->getId());
         $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
 
-        // Attack
+        // Attack until someone dies.
         do {
             $game->takeAction($action->getId());
 
@@ -90,10 +92,17 @@ class ModuleTest extends ModuleTestCase
 
         $this->assertSame("You won!", $v->getTitle());
 
-        // No go to healing.
+        // Now go to healing.
         $action = $this->assertHasAction($v, ["getDestinationSceneId", 6], "Healing");
         $game->takeAction($action->getId());
         $this->assertSame("Healer's Hut", $v->getTitle());
-        $action = $this->assertHasAction($v, ["getDestinationSceneId", 6], "Heal");
+
+        // Assert that we are not completely healed.
+        $this->assertLessThan($character->getMaxHealth(), $character->getHealth());
+        $action = $this->assertHasAction($v, ["getTitle", "Complete Healing"], "Potions");
+        $game->takeAction($action->getId());
+        // Assert we are.
+        $this->assertEquals($character->getMaxHealth(), $character->getHealth());
+
     }
 }
