@@ -197,6 +197,6 @@ class ModuleTest extends ModuleTestCase
         $this->assertNotHasAction($v, ["getTitle", "Search for a fight"], "Fight");
         $this->assertNotHasAction($v, ["getTitle", "Go Thrillseeking"], "Fight");
         $this->assertNotHasAction($v, ["getTitle", "Go Slumming"], "Fight");
-        $this->assertHasAction($v, ["getDestinationSceneId", 1], "Fight");
+        $this->assertHasAction($v, ["getDestinationSceneId", 1], "Back");
     }
 }
