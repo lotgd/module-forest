@@ -76,30 +76,30 @@ scene_connection_groups:
     name: "lotgd/module-village/outside"
     title: "Outside"
 modules:
-    -
-        library: 'lotgd/module-new-day'
-        createdAt: 2016-08-22
-    -
-        library: 'lotgd/module-village'
-        createdAt: 2016-08-22
+  -
+    library: 'lotgd/module-new-day'
+    createdAt: 2016-08-22
+  -
+    library: 'lotgd/module-village'
+    createdAt: 2016-08-22
 event_subscriptions:
-    -
-        pattern: "#h/lotgd/core/default-scene#"
-        class: "LotGD\\Module\\Village\\Module"
-        library: "lotgd/module-village"
-    -
-        pattern: "#h/lotgd/core/navigate-to/*#"
-        class: "LotGD\\Module\\NewDay\\Module"
-        library: "lotgd/module-new-day"
-    -
-        pattern: "#h/lotgd/core/navigate-to/lotgd/module-new-day/newDay#"
-        class: "LotGD\\Module\\Forest\\Module"
-        library: "lotgd/module-forest"
-    -
-        pattern: "#h/lotgd/core/navigate-to/lotgd/module-forest/forest#"
-        class: "LotGD\\Module\\Forest\\Module"
-        library: "lotgd/module-forest"
-    -
-        pattern: "#h/lotgd/core/navigate-to/lotgd/module-forest/healer#"
-        class: "LotGD\\Module\\Forest\\Module"
-        library: "lotgd/module-forest"
+  -
+    pattern: "#h/lotgd/core/default-scene#"
+    class: "LotGD\\Module\\Village\\Module"
+    library: "lotgd/module-village"
+  -
+    pattern: "#h/lotgd/core/navigate-to/*#"
+    class: "LotGD\\Module\\NewDay\\Module"
+    library: "lotgd/module-new-day"
+  -
+    pattern: "#h/lotgd/module-new-day/after#"
+    class: "LotGD\\Module\\Res\\Fight\\Module"
+    library: "lotgd/module-res-fight"
+  -
+    pattern: "#h/lotgd/core/navigate-to/lotgd/module-forest/forest#"
+    class: "LotGD\\Module\\Forest\\Module"
+    library: "lotgd/module-forest"
+  -
+    pattern: "#h/lotgd/core/navigate-to/lotgd/module-forest/healer#"
+    class: "LotGD\\Module\\Forest\\Module"
+    library: "lotgd/module-forest"

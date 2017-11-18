@@ -14,6 +14,7 @@ use LotGD\Core\Models\FighterInterface;
 use LotGD\Core\Models\Scene;
 use LotGD\Core\Models\SceneConnectionGroup;
 use LotGD\Core\Models\Viewpoint;
+use LotGD\Module\Res\Fight\Fight;
 
 use LotGD\Module\Forest\Managers\CreatureManager;
 use LotGD\Module\Forest\Models\Creature;
