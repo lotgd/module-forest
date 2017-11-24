@@ -5,15 +5,11 @@ namespace LotGD\Module\Forest\Tests;
 
 use LotGD\Core\Events\EventContext;
 use LotGD\Core\Events\EventContextData;
-use LotGD\Core\Models\Scene;
-use LotGD\Module\Forest\Scenes\Fight;
-use Monolog\Logger;
-use Monolog\Handler\NullHandler;
-
-use LotGD\Core\Configuration;
 use LotGD\Core\Game;
 use LotGD\Core\Models\Character;
-use LotGD\Core\Models\Module as ModuleModel;
+use LotGD\Module\Forest\Scenes\Fight;
+use LotGD\Module\Res\Fight\Tests\helpers\EventRegistry;
+use LotGD\Module\Res\Fight\Module as FightModule;
 
 use LotGD\Module\Forest\Module;
 
@@ -88,7 +84,7 @@ class ModuleTest extends ModuleTestCase
         do {
             $game->takeAction($action->getId());
 
-            if ($character->getProperty(Module::CharacterPropertyBattleState) !== null){
+            if ($character->getProperty(FightModule::CharacterPropertyBattleState) !== null){
                 $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
             } else {
                 break;

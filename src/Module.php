@@ -11,15 +11,15 @@ use LotGD\Core\Models\Module as ModuleModel;
 use LotGD\Core\Models\Scene;
 
 use LotGD\Module\Village\Module as VillageModule;
+use LotGD\Module\Res\Fight\Module as FightModule;
 use LotGD\Module\Forest\Models\Creature;
 use LotGD\Module\Forest\Scenes\Forest;
 use LotGD\Module\Forest\Scenes\Healer;
 
-const MODULE = "lotgd/module-forest";
-
 class Module implements ModuleInterface {
-    const ModuleIdentifier = MODULE;
-    const CharacterPropertyBattleState = MODULE . "/battle-state";
+    const ModuleIdentifier = "lotgd/module-forest";
+    const CharacterPropertyBattleState = self::ModuleIdentifier . "/battle-state";
+    const BattleContext = self::ModuleIdentifier . "/battle";
 
     public static function handleEvent(Game $g, EventContext $context): EventContext
     {
@@ -29,8 +29,13 @@ class Module implements ModuleInterface {
             case "h/lotgd/core/navigate-to/" . Forest::Template:
                 $context = Forest::handleEvent($g, $context);
                 break;
+
             case "h/lotgd/core/navigate-to/" . Healer::Template:
                 $context = Healer::handleEvent($g, $context);
+                break;
+
+            case FightModule::HookBattleOver:
+                $context = Forest::handleBattleOverEvent($g, $context);
                 break;
         }
         

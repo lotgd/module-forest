@@ -12,6 +12,8 @@ use LotGD\Core\Game;
 use LotGD\Core\Models\Character;
 use LotGD\Core\Models\FighterInterface;
 use LotGD\Core\Models\Scene;
+use LotGD\Core\Models\SceneConnectable;
+use LotGD\Core\Models\SceneConnection;
 use LotGD\Core\Models\SceneConnectionGroup;
 use LotGD\Core\Models\Viewpoint;
 use LotGD\Module\Res\Fight\Fight;
@@ -33,6 +35,10 @@ class Forest
         "back" => ["lotgd/module-forest/forest/back", "Back"],
     ];
 
+    /**
+     * Creates the scene template
+     * @return array
+     */
     public static function create(): array
     {
         $forestScene = Scene::create([
@@ -62,31 +68,38 @@ class Forest
         return [$forestScene, $healerScene];
     }
 
+    /**
+     * Handles the navigation-to forest event
+     * @param Game $g
+     * @param EventContext $context
+     * @return EventContext
+     */
     public static function handleEvent(Game $g, EventContext $context): EventContext
     {
         /** @var array $parameters */
         $parameters = $context->getDataField("parameters");
+        $viewpoint = $context->getDataField("viewpoint");
 
         if (isset($parameters["search"])) {
             return self::handleFightSearch($g, $context);
-        } elseif (isset($parameters[Fight::ActionParameterField])) {
-            return self::handleFightRound($g, $context);
         } else {
-            return self::handleMainForest($g, $context);
+            return self::handleMainForest($g, $context, $viewpoint->getScene()->getId());
         }
-
-        // Do nothing
-        return $context;
     }
 
-    public static function handleMainForest(Game $g, EventContext $context): EventContext
+    /**
+     * Adds additional forest actions, such as options to search for a fight.
+     * @param Game $g
+     * @param EventContext $context
+     * @param int $forestid
+     * @return EventContext
+     */
+    public static function handleMainForest(Game $g, EventContext $context, int $forestid): EventContext
     {
         /** @var Viewpoint $v */
         $v = $context->getDataField("viewpoint");
         /** @var Character $c */
         $c = $g->getCharacter();
-
-        $forestid = $v->getScene()->getId();
 
         // Add an action for fighting - if enough healthpoints
 
@@ -99,7 +112,7 @@ class Forest
             $fightAction[] = new Action($forestid, "Go Thrillseeking", ["search" => CreatureManager::FightDifficultyHard]);
 
             if ($v->hasActionGroup(self::Groups["fight"][0])) {
-                foreach ($fightActions as $action) {
+                foreach ($fightAction as $action) {
                     $v->addActionToGroupId($fightAction, self::Groups["fight"][0]);
                 }
             } else {
@@ -112,6 +125,12 @@ class Forest
         return $context;
     }
 
+    /**
+     * Handles the search action.
+     * @param Game $g
+     * @param EventContext $context
+     * @return EventContext
+     */
     public static function handleFightSearch(Game $g, EventContext $context): EventContext
     {
         /** @var Viewpoint $v */
@@ -154,55 +173,89 @@ class Forest
                 break;
         }
 
-        $battle = new Battle($g, $c, $creature);
-
-        // Good idea would be to pass a "return possibility" to getFightAction - this way, it would return that if fight is over... Alternatively, we check it ourselves?
-        $battleActionGroups = Fight::getFightActions($v->getScene(), $battle);
-
-        // @ToDo: Implement API changes to allow something like $v->cleanActions(); and to check whether if after saving the viewpoint any action is left.
-        $v->setActionGroups($battleActionGroups);
-
-        // Store battle
-        $c->setProperty(ForestModule::CharacterPropertyBattleState, $battle->serialize());
+        $fight = Fight::start($g, $creature, $v->getScene(), ForestModule::BattleContext);
+        $fight->showFightActions();
+        $fight->suspend();
 
         return $context;
     }
 
-    public static function handleFightRound(Game $g, EventContext $context): EventContext
+    /**
+     * Handles the BattleOver event.
+     * @param Game $g
+     * @param EventContext $context
+     * @return EventContext
+     */
+    public static function handleBattleOverEvent(Game $g, EventContext $context): EventContext
     {
-        /** @var Viewpoint $v */
-        $v = $context->getDataField("viewpoint");
-        /** @var Character $c */
-        $c = $g->getCharacter();
-        /** @var array $parameters */
-        $parameters = $context->getDataField("parameters");
+        $battleIdentifier = $context->getDataField("battleIdentifier");
 
-        // Restore battle
-        $battle = Battle::unserialize($g, $c, $c->getProperty(ForestModule::CharacterPropertyBattleState));
+        if ($battleIdentifier == ForestModule::BattleContext) {
+            $battle = $context->getDataField("battle");
+            $viewpoint = $context->getDataField("viewpoint");
+            $referrerSceneId = $context->getDataField("referrerSceneId");
+            $character = $g->getCharacter();;
 
-        // Battle
-        Fight::processBattleOption($g, $battle, $v, $parameters);
+            if ($battle->getWinner() === $character) {
+                $viewpoint->setTitle("You won!");
 
-        // Decide on actions
-        if ($battle->isOver()) {
-            // Forest actions
-            // @ToDo: Experience calculation
-            if ($battle->getWinner() === $c) {
-                $v->setTitle("You won!");
-
-                $v->addDescriptionParagraph(sprintf("You defeated %s. You gain no experience.", $battle->getLoser()->getDisplayName()));
+                $viewpoint->addDescriptionParagraph(sprintf(
+                    "You defeated %s. You gain no experience.",
+                    $battle->getLoser()->getDisplayName()
+                ));
             } else {
-                $v->setTitle("You died!");
+                $viewpoint->setTitle("You died!");
 
-                $v->addDescriptionParagraph(sprintf("You haven defeated by %s. They stand over your dead body, laughting..", $battle->getWinner()->getDisplayName()));
+                $viewpoint->addDescriptionParagraph(sprintf(
+                    "You have been defeated by %s. They stand over your dead body, laughting..",
+                    $battle->getWinner()->getDisplayName()
+                ));
             }
 
-            $c->setProperty(ForestModule::CharacterPropertyBattleState, null);
-        } else {
-            // Fight actions
-            $v->setActionGroups(Fight::getFightActions($v->getScene(), $battle));
+            // Display normal actions (need API later for this, from core)
+            $scene = $g->getEntityManager()->getRepository(Scene::class)->find($referrerSceneId);
 
-            $c->setProperty(ForestModule::CharacterPropertyBattleState, $battle->serialize());
+            $actionGroups = [
+                ActionGroup::DefaultGroup => new ActionGroup(ActionGroup::DefaultGroup, '', 0),
+            ];
+            $scene->getConnections()->map(function(SceneConnection $connection) use ($scene, &$actionGroups) {
+                if ($connection->getOutgoingScene() === $scene) {
+                    // current scene is outgoing, use incoming.
+                    $connectedScene = $connection->getIncomingScene();
+                    $connectionGroupName = $connection->getOutgoingConnectionGroupName();
+                } else {
+                    // current scene is not outgoing, thus incoming, use outgoing.
+                    $connectedScene = $connection->getOutgoingScene();
+                    $connectionGroupName = $connection->getIncomingConnectionGroupName();
+
+                    // Check if the connection is unidirectional - if yes, the current scene (incoming in this branch) cannot
+                    // connect to the outgoing scene.
+                    if ($connection->isDirectionality(SceneConnectable::Unidirectional)) {
+                        return;
+                    }
+                }
+
+                $action = new Action($connectedScene->getId());
+
+                if ($connectionGroupName === null) {
+                    $actionGroups[ActionGroup::DefaultGroup]->addAction($action);
+                } else {
+                    if (isset($actionGroups[$connectionGroupName])) {
+                        $actionGroups[$connectionGroupName]->addAction($action);
+                    } else {
+                        $connectionGroup = $scene->getConnectionGroup($connectionGroupName);
+                        $actionGroup = new ActionGroup($connectionGroupName, $connectionGroup->getTitle(), 0);
+                        $actionGroup->addAction($action);
+
+                        $actionGroups[$connectionGroupName] = $actionGroup;
+                    }
+                }
+            });
+
+            $viewpoint->setActionGroups($actionGroups);
+
+            // Display "search" actions
+            $context = self::handleMainForest($g, $context, $referrerSceneId);
         }
 
         return $context;
