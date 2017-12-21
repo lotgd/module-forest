@@ -1,6 +1,6 @@
 {
     "name": "lotgd/module-forest",
-    "description": "Starter code for your own custom LotGD module.",
+    "description": "Adds a forest to the village where players can combat monsters and earn experience.",
     "type": "lotgd-module",
     "license": "AGPL-3.0",
     "authors": [
@@ -25,7 +25,8 @@
         "lotgd/core": "dev-feature/viewpoint-api as v0.3.3-alpha",
         "lotgd/module-village": "dev-master as v0.3.3-alpha",
         "lotgd/module-new-day": "dev-master as v0.3.3-alpha",
-        "lotgd/module-res-fight": "dev-master as v0.3.3-alpha"
+        "lotgd/module-res-fight": "dev-master as v0.3.3-alpha",
+        "doctrine/orm": "2.5.*"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.1|^5.1",
