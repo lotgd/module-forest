@@ -126,7 +126,7 @@ class Forest
     }
 
     /**
-     * Handles the search action.
+     * Handles the navigation
      * @param Game $g
      * @param EventContext $context
      * @return EventContext
