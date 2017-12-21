@@ -9,7 +9,7 @@ use LotGD\Core\Game;
 use LotGD\Core\Models\Character;
 use LotGD\Module\Forest\Scenes\Fight;
 use LotGD\Module\Res\Fight\Tests\helpers\EventRegistry;
-use LotGD\Module\Res\Fight\Module as FightModule;
+use LotGD\Module\Res\Fight\Module as ResFightModule;
 
 use LotGD\Module\Forest\Module;
 
@@ -80,11 +80,14 @@ class ModuleTest extends ModuleTestCase
         $game->takeAction($action->getId());
         $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
 
+        // Save experience first.
+        $currentExp = $character->getProperty(ResFightModule::CharacterPropertyCurrentExperience, 0);
+
         // Attack until someone dies.
         do {
             $game->takeAction($action->getId());
 
-            if ($character->getProperty(FightModule::CharacterPropertyBattleState) !== null){
+            if ($character->getProperty(ResFightModule::CharacterPropertyBattleState) !== null){
                 $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
             } else {
                 break;
@@ -92,6 +95,7 @@ class ModuleTest extends ModuleTestCase
         } while (true);
 
         $this->assertSame("You won!", $v->getTitle());
+        $this->assertGreaterThan($currentExp, $character->getProperty(ResFightModule::CharacterPropertyCurrentExperience, 0));
 
         // Now go to healing.
         $action = $this->assertHasAction($v, ["getDestinationSceneId", 6], "Healing");

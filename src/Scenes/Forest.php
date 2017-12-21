@@ -17,6 +17,7 @@ use LotGD\Core\Models\SceneConnection;
 use LotGD\Core\Models\SceneConnectionGroup;
 use LotGD\Core\Models\Viewpoint;
 use LotGD\Module\Res\Fight\Fight;
+use LotGD\Module\Res\Fight\Module as ResFightModule;
 
 use LotGD\Module\Forest\Managers\CreatureManager;
 use LotGD\Module\Forest\Models\Creature;
@@ -191,23 +192,34 @@ class Forest
         $battleIdentifier = $context->getDataField("battleIdentifier");
 
         if ($battleIdentifier == ForestModule::BattleContext) {
+            /** @var Battle $battle */
             $battle = $context->getDataField("battle");
             $viewpoint = $context->getDataField("viewpoint");
             $referrerSceneId = $context->getDataField("referrerSceneId");
             $character = $g->getCharacter();;
 
             if ($battle->getWinner() === $character) {
-                $viewpoint->setTitle("You won!");
+                // gain experience
+                $experienceGained = ResFightModule::characterEarnExperience($character, $battle->getMonster());
 
+                // Decorate viewpoint
+                $viewpoint->setTitle("You won!");
                 $viewpoint->addDescriptionParagraph(sprintf(
-                    "You defeated %s. You gain no experience.",
-                    $battle->getLoser()->getDisplayName()
+                    "You defeated %s. You gain %s experience.",
+                    $battle->getLoser()->getDisplayName(),
+                    $experienceGained
                 ));
             } else {
-                $viewpoint->setTitle("You died!");
+                // Remove 10% of the characters experience.
+                $character->setProperty(
+                    ResFightModule::CharacterPropertyCurrentExperience,
+                    $character->getProperty(ResFightModule::CharacterPropertyCurrentExperience)*0.9
+                );
 
+                // Decorate viewpoint
+                $viewpoint->setTitle("You died!");
                 $viewpoint->addDescriptionParagraph(sprintf(
-                    "You have been defeated by %s. They stand over your dead body, laughting..",
+                    "You have been defeated by %s. They stand over your dead body, laughting. And you loose 10%% of your experience.",
                     $battle->getWinner()->getDisplayName()
                 ));
             }
