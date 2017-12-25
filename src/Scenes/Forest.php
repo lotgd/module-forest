@@ -8,6 +8,8 @@ use LotGD\Core\Action;
 use LotGD\Core\ActionGroup;
 use LotGD\Core\Battle;
 use LotGD\Core\Events\EventContext;
+use LotGD\Core\Events\NavigateToSceneData;
+use LotGD\Core\Events\ViewpointDecorationEventData;
 use LotGD\Core\Game;
 use LotGD\Core\Models\Character;
 use LotGD\Core\Models\FighterInterface;
@@ -122,6 +124,11 @@ class Forest
                 $v->addActionGroup($group);
             }
         }
+
+        $hookData = $g->getEventManager()->publish(
+            ForestModule::HookForestNavigation,
+            ViewpointDecorationEventData::create(["viewpoint" => $v])
+        );
 
         return $context;
     }

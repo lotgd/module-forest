@@ -1099,18 +1099,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lotgd/core.git",
-                "reference": "56c80e3f8d32503854b66982087fdf19eafa19ba"
+                "reference": "003a6517bacebd3594419291fd0387455ecee5af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lotgd/core/zipball/56c80e3f8d32503854b66982087fdf19eafa19ba",
-                "reference": "56c80e3f8d32503854b66982087fdf19eafa19ba",
+                "url": "https://api.github.com/repos/lotgd/core/zipball/003a6517bacebd3594419291fd0387455ecee5af",
+                "reference": "003a6517bacebd3594419291fd0387455ecee5af",
                 "shasum": ""
             },
             "require": {
                 "composer/composer": "*",
                 "d11wtq/boris": "^1.0",
-                "doctrine/orm": "^2.5",
+                "doctrine/orm": "2.5.*",
                 "gedmo/doctrine-extensions": "*",
                 "monolog/monolog": "^1.12",
                 "php": "^7.1.0",
@@ -1140,7 +1140,7 @@
                 "source": "https://github.com/lotgd/core/tree/feature/viewpoint-api",
                 "issues": "https://github.com/lotgd/core/issues"
             },
-            "time": "2017-09-27 11:22:00"
+            "time": "2017-12-25 13:59:55"
         },
         {
             "name": "lotgd/module-new-day",
@@ -1193,12 +1193,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lotgd/module-res-fight.git",
-                "reference": "3a06f61bcf389affa38d430f01092e6e178813c4"
+                "reference": "057e775a43a33b44f1d95b37a074b7041b9c66c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lotgd/module-res-fight/zipball/3a06f61bcf389affa38d430f01092e6e178813c4",
-                "reference": "3a06f61bcf389affa38d430f01092e6e178813c4",
+                "url": "https://api.github.com/repos/lotgd/module-res-fight/zipball/057e775a43a33b44f1d95b37a074b7041b9c66c1",
+                "reference": "057e775a43a33b44f1d95b37a074b7041b9c66c1",
                 "shasum": ""
             },
             "require": {
@@ -1231,7 +1231,7 @@
                 "source": "https://github.com/lotgd/module-res-fight/tree/master",
                 "issues": "https://github.com/lotgd/module-res-fight/issues"
             },
-            "time": "2017-12-21 10:32:51"
+            "time": "2017-12-24 13:52:45"
         },
         {
             "name": "lotgd/module-village",

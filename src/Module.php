@@ -18,8 +18,11 @@ use LotGD\Module\Forest\Scenes\Healer;
 
 class Module implements ModuleInterface {
     const ModuleIdentifier = "lotgd/module-forest";
-    const CharacterPropertyBattleState = self::ModuleIdentifier . "/battle-state";
+
     const BattleContext = self::ModuleIdentifier . "/battle";
+    const CharacterPropertyBattleState = self::ModuleIdentifier . "/battle-state";
+    const HookForestNavigation = self::ModuleIdentifier . "/forest-navigation";
+
 
     public static function handleEvent(Game $g, EventContext $context): EventContext
     {
