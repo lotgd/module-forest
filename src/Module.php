@@ -21,8 +21,7 @@ class Module implements ModuleInterface {
 
     const BattleContext = self::ModuleIdentifier . "/battle";
     const CharacterPropertyBattleState = self::ModuleIdentifier . "/battle-state";
-    const HookForestNavigation = self::ModuleIdentifier . "/forest-navigation";
-
+    const HookForestNavigation = "h/" . self::ModuleIdentifier . "/forest-navigation";
 
     public static function handleEvent(Game $g, EventContext $context): EventContext
     {

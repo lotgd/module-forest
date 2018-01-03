@@ -2,4 +2,4 @@ entityNamespace: "LotGD\\Module\\Forest\\Models"
 subscriptionPatterns:
   - "#h/lotgd/core/navigate-to/lotgd/module-forest/forest#"
   - "#h/lotgd/core/navigate-to/lotgd/module-forest/healer#"
-  - "#/lotgd/module-res-fight/battleOver#"
+  - "#h/lotgd/module-res-fight/battleOver#"
