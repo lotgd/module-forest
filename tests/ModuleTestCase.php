@@ -16,6 +16,7 @@ use LotGD\Core\Tests\ModelTestCase;
 use LotGD\Core\Models\Module as ModuleModel;
 
 use LotGD\Module\Forest\Module;
+use PHPUnit\Framework\AssertionFailedError;
 
 class ModuleTestCase extends ModelTestCase
 {
