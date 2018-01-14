@@ -203,7 +203,7 @@ class ModuleTest extends ModuleTestCase
         do {
             $game->takeAction($action->getId());
 
-            if ($character->getProperty(Module::CharacterPropertyBattleState) !== null){
+            if ($character->getProperty(ResFightModule::CharacterPropertyBattleState) !== null){
                 $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
             } else {
                 break;

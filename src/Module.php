@@ -20,7 +20,6 @@ class Module implements ModuleInterface {
     const ModuleIdentifier = "lotgd/module-forest";
 
     const BattleContext = self::ModuleIdentifier . "/battle";
-    const CharacterPropertyBattleState = self::ModuleIdentifier . "/battle-state";
     const HookForestNavigation = "h/" . self::ModuleIdentifier . "/forest-navigation";
 
     public static function handleEvent(Game $g, EventContext $context): EventContext

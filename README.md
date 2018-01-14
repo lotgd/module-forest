@@ -1,6 +1,10 @@
 # module-forest
-[![Build Status](https://travis-ci.org/lotgd/module-project.svg?branch=master)](https://travis-ci.org/lotgd/module-project)
+[![Build Status](https://travis-ci.org/lotgd/module-forest.svg?branch=master)](https://travis-ci.org/lotgd/module-forest)
 
-A template for a new LotGD module. Start with this code to make your own module.
+This module provides a forest and a healer's hut where characters can engage in combat in a 
+varying degree of difficulties.
 
-For instructions, see the Modules section of the core's [README](https://github.com/lotgd/core/#modules).
+## API
+### Events and hooks
+- `h/lotgd/module-forest/forest-navigation` (`Module::HookForestNavigation`)\
+This hook can be used to extend the forest navigation. The only variable it provides is the viewpoint.
