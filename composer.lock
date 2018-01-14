@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "56d75bd58da0e8ade8d56c67281bc2e2",
-    "content-hash": "e03ed9786adabc54b37f9f592ca9d792",
+    "hash": "7b5d4d44dd346d9000295d289b16c231",
+    "content-hash": "ba3c8307d43a62af1d1bc6e41e40abd0",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1095,7 +1095,7 @@
         },
         {
             "name": "lotgd/core",
-            "version": "dev-master",
+            "version": "v0.4.0-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lotgd/core.git",
@@ -1144,21 +1144,21 @@
         },
         {
             "name": "lotgd/module-new-day",
-            "version": "dev-master",
+            "version": "v0.4.0-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lotgd/module-new-day.git",
-                "reference": "8450594d8075e7b8b136a1a5ca075c6b643ace02"
+                "reference": "c18f1ee393398e78c4cd03a7d8d6b58e0e483c7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lotgd/module-new-day/zipball/8450594d8075e7b8b136a1a5ca075c6b643ace02",
-                "reference": "8450594d8075e7b8b136a1a5ca075c6b643ace02",
+                "url": "https://api.github.com/repos/lotgd/module-new-day/zipball/c18f1ee393398e78c4cd03a7d8d6b58e0e483c7a",
+                "reference": "c18f1ee393398e78c4cd03a7d8d6b58e0e483c7a",
                 "shasum": ""
             },
             "require": {
-                "lotgd/core": "dev-master as v0.3.3-alpha",
-                "lotgd/module-village": "dev-master as v0.3.3-alpha"
+                "lotgd/core": "^0.4.0-alpha",
+                "lotgd/module-village": "^0.4.0-alpha"
             },
             "require-dev": {
                 "phpunit/dbunit": "^2.0",
@@ -1182,29 +1182,29 @@
             ],
             "description": "A new day module.",
             "support": {
-                "source": "https://github.com/lotgd/module-new-day/tree/master",
+                "source": "https://github.com/lotgd/module-new-day/tree/version/0.4",
                 "issues": "https://github.com/lotgd/module-new-day/issues"
             },
-            "time": "2018-01-10 11:03:30"
+            "time": "2018-01-14 14:34:48"
         },
         {
             "name": "lotgd/module-res-fight",
-            "version": "dev-master",
+            "version": "v0.4.0-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lotgd/module-res-fight.git",
-                "reference": "b83df97fc8f565af7ceaa7cd857ff9d773220fda"
+                "reference": "eb20c9aae9f6d64904bd47f51fc75555787d30c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lotgd/module-res-fight/zipball/b83df97fc8f565af7ceaa7cd857ff9d773220fda",
-                "reference": "b83df97fc8f565af7ceaa7cd857ff9d773220fda",
+                "url": "https://api.github.com/repos/lotgd/module-res-fight/zipball/eb20c9aae9f6d64904bd47f51fc75555787d30c6",
+                "reference": "eb20c9aae9f6d64904bd47f51fc75555787d30c6",
                 "shasum": ""
             },
             "require": {
-                "lotgd/core": "dev-master as v0.3.3-alpha",
-                "lotgd/module-new-day": "dev-master as v0.3.3-alpha",
-                "lotgd/module-village": "dev-master as v0.3.3-alpha"
+                "lotgd/core": "^0.4.0-alpha",
+                "lotgd/module-new-day": "^0.4.0-alpha",
+                "lotgd/module-village": "^0.4.0-alpha"
             },
             "require-dev": {
                 "phpunit/dbunit": "*",
@@ -1228,27 +1228,27 @@
             ],
             "description": "A resource module which provides basic fighting capabilities as well as hooks to extend them.",
             "support": {
-                "source": "https://github.com/lotgd/module-res-fight/tree/master",
+                "source": "https://github.com/lotgd/module-res-fight/tree/version/0.4",
                 "issues": "https://github.com/lotgd/module-res-fight/issues"
             },
-            "time": "2018-01-14 11:31:08"
+            "time": "2018-01-14 14:43:26"
         },
         {
             "name": "lotgd/module-village",
-            "version": "dev-master",
+            "version": "v0.4.0-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lotgd/module-village.git",
-                "reference": "5238c0d62f5a040052c3bc92f42cfcec98ee77d3"
+                "reference": "6d917f9c7cedf58468ebba4deec045cf8d53b68e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lotgd/module-village/zipball/5238c0d62f5a040052c3bc92f42cfcec98ee77d3",
-                "reference": "5238c0d62f5a040052c3bc92f42cfcec98ee77d3",
+                "url": "https://api.github.com/repos/lotgd/module-village/zipball/6d917f9c7cedf58468ebba4deec045cf8d53b68e",
+                "reference": "6d917f9c7cedf58468ebba4deec045cf8d53b68e",
                 "shasum": ""
             },
             "require": {
-                "lotgd/core": "^0.3.0-alpha"
+                "lotgd/core": "^0.4.0-alpha"
             },
             "require-dev": {
                 "phpunit/dbunit": "^2.0"
@@ -1274,10 +1274,10 @@
             ],
             "description": "A basic village.",
             "support": {
-                "source": "https://github.com/lotgd/module-village/tree/master",
+                "source": "https://github.com/lotgd/module-village/tree/version/0.4",
                 "issues": "https://github.com/lotgd/module-village/issues"
             },
-            "time": "2017-09-12 08:10:30"
+            "time": "2018-01-14 14:29:00"
         },
         {
             "name": "monolog/monolog",
@@ -3205,38 +3205,13 @@
             "time": "2016-11-23 20:04:58"
         }
     ],
-    "aliases": [
-        {
-            "alias": "v0.3.3-alpha",
-            "alias_normalized": "0.3.3.0-alpha",
-            "version": "9999999-dev",
-            "package": "lotgd/core"
-        },
-        {
-            "alias": "v0.3.3-alpha",
-            "alias_normalized": "0.3.3.0-alpha",
-            "version": "9999999-dev",
-            "package": "lotgd/module-village"
-        },
-        {
-            "alias": "v0.3.3-alpha",
-            "alias_normalized": "0.3.3.0-alpha",
-            "version": "9999999-dev",
-            "package": "lotgd/module-new-day"
-        },
-        {
-            "alias": "v0.3.3-alpha",
-            "alias_normalized": "0.3.3.0-alpha",
-            "version": "9999999-dev",
-            "package": "lotgd/module-res-fight"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "lotgd/core": 20,
-        "lotgd/module-village": 20,
-        "lotgd/module-new-day": 20,
-        "lotgd/module-res-fight": 20
+        "lotgd/core": 15,
+        "lotgd/module-village": 15,
+        "lotgd/module-new-day": 15,
+        "lotgd/module-res-fight": 15
     },
     "prefer-stable": false,
     "prefer-lowest": false,
