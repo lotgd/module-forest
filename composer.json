@@ -22,7 +22,7 @@
         }
     ],
     "require": {
-        "lotgd/core": "dev-feature/viewpoint-api as v0.3.3-alpha",
+        "lotgd/core": "dev-master as v0.3.3-alpha",
         "lotgd/module-village": "dev-master as v0.3.3-alpha",
         "lotgd/module-new-day": "dev-master as v0.3.3-alpha",
         "lotgd/module-res-fight": "dev-master as v0.3.3-alpha"

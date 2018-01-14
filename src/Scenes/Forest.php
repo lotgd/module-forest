@@ -19,6 +19,7 @@ use LotGD\Core\Models\SceneConnection;
 use LotGD\Core\Models\SceneConnectionGroup;
 use LotGD\Core\Models\Viewpoint;
 use LotGD\Module\Res\Fight\Fight;
+use LotGD\Module\Res\Fight\Models\CharacterResFightExtension;
 use LotGD\Module\Res\Fight\Module as ResFightModule;
 
 use LotGD\Module\Forest\Managers\CreatureManager;
@@ -106,7 +107,7 @@ class Forest
 
         // Add an action for fighting - if enough healthpoints
 
-        if ($c->isAlive()) {
+        if ($c->isAlive() and $c->getTurns() > 0) {
             $fightAction = [new Action($forestid, "Search for a fight", ["search" => CreatureManager::FightDifficultyNormal])];
 
             if ($c->getLevel() > 1) {
@@ -114,9 +115,10 @@ class Forest
             }
             $fightAction[] = new Action($forestid, "Go Thrillseeking", ["search" => CreatureManager::FightDifficultyHard]);
 
-            if ($v->hasActionGroup(self::Groups["fight"][0])) {
+            $actionGroup = $v->findActionGroupById(self::Groups["fight"][0]);
+            if ($actionGroup) {
                 foreach ($fightAction as $action) {
-                    $v->addActionToGroupId($fightAction, self::Groups["fight"][0]);
+                    $v->addActionToGroupId($action, self::Groups["fight"][0]);
                 }
             } else {
                 $group = new ActionGroup(self::Groups["fight"][0], self::Groups["fight"][1], 0);
@@ -145,6 +147,8 @@ class Forest
         $v = $context->getDataField("viewpoint");
         /** @var Character $c */
         $c = $g->getCharacter();
+
+        $c->incrementTurns(-1);
 
         // @ToDo: Implement hooks for events
 
@@ -207,7 +211,14 @@ class Forest
 
             if ($battle->getWinner() === $character) {
                 // gain experience
-                $experienceGained = ResFightModule::characterEarnExperience($character, $battle->getMonster());
+                $monster = $battle->getMonster();
+                if ($monster instanceof Creature) {
+                    $experienceGained = $monster->getExperience($character);
+                } else {
+                    $experienceGained = 0;
+                }
+
+                $character->rewardExperience($experienceGained);
 
                 // Decorate viewpoint
                 $viewpoint->setTitle("You won!");
@@ -218,10 +229,7 @@ class Forest
                 ));
             } else {
                 // Remove 10% of the characters experience.
-                $character->setProperty(
-                    ResFightModule::CharacterPropertyCurrentExperience,
-                    $character->getProperty(ResFightModule::CharacterPropertyCurrentExperience)*0.9
-                );
+                $character->multiplyExperience(0.9);
 
                 // Decorate viewpoint
                 $viewpoint->setTitle("You died!");

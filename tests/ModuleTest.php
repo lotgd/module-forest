@@ -50,6 +50,7 @@ class ModuleTest extends ModuleTestCase
         $descriptions = explode("\n\n", $v->getDescription());
         $this->assertContains("You feel energized! Today, you can fight for 20 rounds.", $descriptions);
         $this->assertSame($character->getMaxHealth(), $character->getHealth());
+        $this->assertSame(20, $character->getTurns());
         $character->setHealth(90);
 
         // Should be in the village
@@ -163,6 +164,22 @@ class ModuleTest extends ModuleTestCase
         $this->assertNotHasAction($v, ["getTitle", "Search for a fight"], "Fight");
         $this->takeActions($game, $v, [6]);
         $this->assertNotHasAction($v, ["getTitle", "Complete Healing"], "Potions");
+    }
+
+    public function testIfTiredCharacterCannotStartAFight()
+    {
+        /** @var Game $game */
+        $game = $this->g;
+        /** @var Character $character */
+        $character = $this->getEntityManager()->getRepository(Character::class)->find(6);
+        $character->setProperty(\LotGD\Module\NewDay\Module::CharacterPropertyLastNewDay, new \DateTime());
+        $game->setCharacter($character);
+        $v = $game->getViewpoint();
+
+        // Take actions
+        $character->setTurns(0);
+        $this->takeActions($game, $v, [5]);
+        $this->assertNotHasAction($v, ["getTitle", "Search for a fight"], "Fight");
     }
 
     public function testIfAForestFightEndsProperlyIfTheCharacterDied()

@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace LotGD\Module\Forest\Tests;
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use LotGD\Core\Action;
 use LotGD\Core\Exceptions\ArgumentException;
 use LotGD\Core\GameBuilder;
+use LotGD\Core\LibraryConfigurationManager;
+use LotGD\Core\ModelExtender;
 use LotGD\Core\Models\Viewpoint;
 use Monolog\Logger;
 use Monolog\Handler\NullHandler;
@@ -23,7 +26,7 @@ class ModuleTestCase extends ModelTestCase
     const Library = 'lotgd/module-forest';
     const RootNamespace = "LotGD\\Module\\Forest\\";
 
-    protected $g;
+    public $g;
     protected $moduleModel;
 
     protected function getDataSet(): \PHPUnit_Extensions_Database_DataSet_YamlDataSet
@@ -57,6 +60,23 @@ class ModuleTestCase extends ModelTestCase
         $this->moduleModel = new ModuleModel(self::Library);
         $this->moduleModel->save($this->getEntityManager());
         Module::onRegister($this->g, $this->moduleModel);
+
+        $this->g->getEntityManager()->flush();
+        $this->g->getEntityManager()->clear();
+
+        // Run model extender
+        AnnotationRegistry::registerLoader("class_exists");
+
+        $modelExtender = new ModelExtender();
+        $libraryConfigurationManager = new LibraryConfigurationManager($this->g->getComposerManager(), getcwd());
+
+        foreach ($libraryConfigurationManager->getConfigurations() as $config) {
+            $modelExtensions = $config->getSubKeyIfItExists(["modelExtensions"]);
+
+            if ($modelExtensions) {
+                $modelExtender->addMore($modelExtensions);
+            }
+        }
 
         $this->g->getEntityManager()->flush();
         $this->g->getEntityManager()->clear();

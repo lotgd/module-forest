@@ -39,6 +39,15 @@ characters:
     health: 1
     level: 10
     deletedAt:
+
+  -
+    id: 6
+    name: "The Tired"
+    displayName: "The Tired"
+    maxHealth: 100
+    health: 1
+    level: 10
+    deletedAt:
 scenes:
   -
     id: 1

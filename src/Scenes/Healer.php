@@ -91,7 +91,8 @@ class Healer
                 new Action($v->getScene()->getId(), "Complete Healing", ["healing" => "all"]),
             ];
 
-            if ($v->hasActionGroup(self::Groups["healing"][0])) {
+            $healActionGroup = $v->findActionGroupById(self::Groups["healing"][0]);
+            if ($healActionGroup) {
                 foreach ($healActions as $action) {
                     $v->addActionToGroupId($action, self::Groups["healing"][0]);
                 }

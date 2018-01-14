@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping\Table;
 use LotGD\Core\BuffList;
 use LotGD\Core\Game;
 use LotGD\Core\Models\BasicEnemy;
+use LotGD\Core\Models\Character;
 use LotGD\Core\Models\CreateableInterface;
 use LotGD\Core\Tools\Model\Creator;
 use LotGD\Core\Tools\Model\Deletor;
@@ -33,6 +34,28 @@ class Creature extends BasicEnemy implements CreateableInterface
     /** @Column(type="integer") */
     protected $maxHealth;
     protected $bufflist;
+
+    const ExperienceTable = [
+        1 => 14,
+        2 => 24,
+        3 => 34,
+        4 => 45,
+        5 => 55,
+        6 => 66,
+        7 => 77,
+        8 => 89,
+        9 => 101,
+        10 => 114,
+        11 => 127,
+        12 => 141,
+        13 => 135,
+        14 => 172,
+        15 => 189,
+        16 => 207,
+        17 => 223,
+        18 => 249,
+    ];
+
 
     /**
      * @var array
@@ -89,11 +112,10 @@ class Creature extends BasicEnemy implements CreateableInterface
 
     /**
      * Returns the attack value of a creature, possibly changed by events.
-     * @param Game $game
      * @param bool $ignoreBuffs
      * @return int
      */
-    public function getAttack(Game $game, bool $ignoreBuffs = false): int
+    public function getAttack(bool $ignoreBuffs = false): int
     {
         return $this->attack;
     }
@@ -109,11 +131,10 @@ class Creature extends BasicEnemy implements CreateableInterface
 
     /**
      * Returns the defense value of the creature, possibly changed by events.
-     * @param Game $game
      * @param bool $ignoreBuffs
      * @return int
      */
-    public function getDefense(Game $game, bool $ignoreBuffs = false): int
+    public function getDefense(bool $ignoreBuffs = false): int
     {
         return $this->defense;
     }
@@ -164,5 +185,34 @@ class Creature extends BasicEnemy implements CreateableInterface
     public function getWeapon(): string
     {
         return $this->weapon;
+    }
+
+    /**
+     * Returns the experience earned through this monster with character scaling.
+     * @param Character $character
+     * @return int
+     */
+    public function getExperience(Character $character): int
+    {
+        $levelDifference = $this->level - $character->getLevel();
+
+        if (isset($experienceTable[$this->level])) {
+            $experience = $experienceTable[$this->level];
+        } else {
+            $experience = 0;
+        }
+
+        if ($levelDifference < 0) {
+            $modifier = -0.25 * $levelDifference;
+        } else {
+            $modifier = 0.1 * $levelDifference;
+        }
+
+        $experience = (int)round($experience * $modifier);
+        if ($experience <= 0) {
+            $experience = 1;
+        }
+
+        return $experience;
     }
 }
