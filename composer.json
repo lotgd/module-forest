@@ -18,17 +18,19 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://code.lot.gd"
+            "url": "https://raw.githubusercontent.com/lotgd/packages/master/build/packages.json"
         }
     ],
     "require": {
-        "lotgd/core": "^0.4.0-alpha",
+        "lotgd/core": "dev-feature/symfony4 as 0.4.3",
         "lotgd/module-village": "^0.4.0-alpha",
         "lotgd/module-new-day": "^0.4.0-alpha",
-        "lotgd/module-res-fight": "^0.4.0-alpha"
+        "lotgd/module-res-fight": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.1|^5.1",
         "phpunit/dbunit": "*"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

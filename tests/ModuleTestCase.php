@@ -99,17 +99,9 @@ class ModuleTestCase extends ModelTestCase
     protected function takeActions(Game $game, Viewpoint $viewpoint, array $actions)
     {
         foreach ($actions as $action) {
-            if (is_int($action)) {
-                $searchFor = "getDestinationSceneId";
-            } elseif (is_string($action)) {
-                $searchFor = "getTitle";
-            } else {
-                throw new \Exception("\$actions parameter must be a list containing integers or strings.");
-            }
-
             foreach ($viewpoint->getActionGroups() as $group) {
                 foreach ($group->getActions() as $a) {
-                    if ($a->$searchFor() == $action) {
+                    if ($a->getDestinationSceneId() == $action or $a->getTitle() == $action) {
                         $game->takeAction($a->getId());
                         break 2;
                     }

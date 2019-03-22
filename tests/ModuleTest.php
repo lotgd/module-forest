@@ -15,7 +15,7 @@ use LotGD\Module\Forest\Module;
 
 class ModuleTest extends ModuleTestCase
 {
-    const Library = 'lotgd/module-project';
+    const Library = 'lotgd/module-forest';
 
     protected function getDataSet(): \PHPUnit_Extensions_Database_DataSet_YamlDataSet
     {
@@ -34,14 +34,26 @@ class ModuleTest extends ModuleTestCase
         Module::handleEvent($this->g, $context);
     }
 
+    public function getTestSceneIds()
+    {
+        $em = $this->getEntityManager();
+        $game = $this->g; /* @var Game $game */
+
+        $module = $game->getModuleManager()->getModule(Module::ModuleIdentifier);
+        $scenes = $module->getProperty(Module::GeneratedSceneProperty);
+        return [$scenes["forest"][0], $scenes["healer"][0]];
+    }
+
     public function testModuleFlowWhileCharacterStaysAlive()
     {
         /** @var Game $game */
         $game = $this->g;
         /** @var Character $character */
-        $character = $this->getEntityManager()->getRepository(Character::class)->findById(1)[0];
+        $character = $this->getEntityManager()->getRepository(Character::class)->findById("10000000-0000-0000-0000-000000000001")[0];
         $game->setCharacter($character);
         $v = $game->getViewpoint();
+
+        [$forestSceneId, $healerSceneId] = $this->getTestSceneIds();
 
         // Assert new day happened
         $this->assertSame("It is a new day!", $v->getTitle());
@@ -57,12 +69,12 @@ class ModuleTest extends ModuleTestCase
         $action = $v->getActionGroups()[0]->getActions()[0];
         $game->takeAction($action->getId());
         $this->assertSame("Village", $v->getTitle());
-        $action = $this->assertHasAction($v, ["getDestinationSceneId", 5], "Outside");
+        $action = $this->assertHasAction($v, ["getDestinationSceneId", $forestSceneId], "Outside");
 
         // Go to the forest
         $game->takeAction($action->getId());
         $this->assertSame("The Forest", $v->getTitle());
-        $action = $this->assertHasAction($v, ["getDestinationSceneId", 6], "Healing");
+        $action = $this->assertHasAction($v, ["getDestinationSceneId", $healerSceneId], "Healing");
         $this->assertHasAction($v, ["getTitle", "Search for a fight"], "Fight");
         $this->assertHasAction($v, ["getTitle", "Go Thrillseeking"], "Fight");
         $this->assertHasAction($v, ["getTitle", "Go Slumming"], "Fight");
@@ -70,7 +82,7 @@ class ModuleTest extends ModuleTestCase
         // Go to the healer.
         $game->takeAction($action->getId());
         $this->assertSame("Healer's Hut", $v->getTitle());
-        $action = $this->assertHasAction($v, ["getDestinationSceneId", 5], "Back");
+        $action = $this->assertHasAction($v, ["getDestinationSceneId", $forestSceneId], "Back");
 
         // Back to the forest
         $game->takeAction($action->getId());
@@ -99,7 +111,7 @@ class ModuleTest extends ModuleTestCase
         $this->assertGreaterThan($currentExp, $character->getProperty(ResFightModule::CharacterPropertyCurrentExperience, 0));
 
         // Now go to healing.
-        $action = $this->assertHasAction($v, ["getDestinationSceneId", 6], "Healing");
+        $action = $this->assertHasAction($v, ["getDestinationSceneId", $healerSceneId], "Healing");
         $game->takeAction($action->getId());
         $this->assertSame("Healer's Hut", $v->getTitle());
 
@@ -116,18 +128,20 @@ class ModuleTest extends ModuleTestCase
         /** @var Game $game */
         $game = $this->g;
         /** @var Character $character */
-        $character = $this->getEntityManager()->getRepository(Character::class)->find(2);
+        $character = $this->getEntityManager()->getRepository(Character::class)->find("10000000-0000-0000-0000-000000000002");
         $character->setProperty(\LotGD\Module\NewDay\Module::CharacterPropertyLastNewDay, new \DateTime());
         $game->setCharacter($character);
         $v = $game->getViewpoint();
 
+        [$forestSceneId, $healerSceneId] = $this->getTestSceneIds();
+
         // Take actions
-        $this->takeActions($game, $v, [5, 6]);
+        $this->takeActions($game, $v, [$forestSceneId, $healerSceneId]);
         $this->assertHasAction($v, ["getTitle", "Complete Healing"], "Potions");
 
         // Heal, go back and return
         $character->setHealth($character->getMaxHealth());
-        $this->takeActions($game, $v, [5, 6]);
+        $this->takeActions($game, $v, [$forestSceneId, $healerSceneId]);
         $this->assertNotHasAction($v, ["getTitle", "Complete Healing"], "Potions");
     }
 
@@ -136,14 +150,16 @@ class ModuleTest extends ModuleTestCase
         /** @var Game $game */
         $game = $this->g;
         /** @var Character $character */
-        $character = $this->getEntityManager()->getRepository(Character::class)->find(3);
+        $character = $this->getEntityManager()->getRepository(Character::class)->find("10000000-0000-0000-0000-000000000003");
         $character->setProperty(\LotGD\Module\NewDay\Module::CharacterPropertyLastNewDay, new \DateTime());
         $game->setCharacter($character);
         $v = $game->getViewpoint();
 
+        [$forestSceneId, $healerSceneId] = $this->getTestSceneIds();
+
         // Take actions
         $this->assertGreaterThan($character->getMaxHealth(), $character->getHealth());
-        $this->takeActions($game, $v, [5, 6]);
+        $this->takeActions($game, $v, [$forestSceneId, $healerSceneId]);
         $this->assertNotHasAction($v, ["getTitle", "Complete Healing"], "Potions");
         $this->assertSame($character->getMaxHealth(), $character->getHealth());
     }
@@ -153,16 +169,16 @@ class ModuleTest extends ModuleTestCase
         /** @var Game $game */
         $game = $this->g;
         /** @var Character $character */
-        $character = $this->getEntityManager()->getRepository(Character::class)->find(4);
+        $character = $this->getEntityManager()->getRepository(Character::class)->find("10000000-0000-0000-0000-000000000004");
         $character->setProperty(\LotGD\Module\NewDay\Module::CharacterPropertyLastNewDay, new \DateTime());
         $game->setCharacter($character);
         $v = $game->getViewpoint();
 
         // Take actions
         $this->assertSame(0, $character->getHealth());
-        $this->takeActions($game, $v, [5]);
+        $this->takeActions($game, $v, ["20000000-0000-0000-0000-000000000005"]);
         $this->assertNotHasAction($v, ["getTitle", "Search for a fight"], "Fight");
-        $this->takeActions($game, $v, [6]);
+        $this->takeActions($game, $v, ["20000000-0000-0000-0000-000000000006"]);
         $this->assertNotHasAction($v, ["getTitle", "Complete Healing"], "Potions");
     }
 
@@ -171,7 +187,7 @@ class ModuleTest extends ModuleTestCase
         /** @var Game $game */
         $game = $this->g;
         /** @var Character $character */
-        $character = $this->getEntityManager()->getRepository(Character::class)->find(6);
+        $character = $this->getEntityManager()->getRepository(Character::class)->find("10000000-0000-0000-0000-000000000006");
         $character->setProperty(\LotGD\Module\NewDay\Module::CharacterPropertyLastNewDay, new \DateTime());
         $game->setCharacter($character);
         $v = $game->getViewpoint();
@@ -187,14 +203,17 @@ class ModuleTest extends ModuleTestCase
         /** @var Game $game */
         $game = $this->g;
         /** @var Character $character */
-        $character = $this->getEntityManager()->getRepository(Character::class)->find(5);
+        $character = $this->getEntityManager()->getRepository(Character::class)->find("10000000-0000-0000-0000-000000000005");
         $character->setProperty(\LotGD\Module\NewDay\Module::CharacterPropertyLastNewDay, new \DateTime());
         $game->setCharacter($character);
         $v = $game->getViewpoint();
 
+
+        [$forestSceneId, $healerSceneId] = $this->getTestSceneIds();
+
         // Take actions
         $this->assertSame(1, $character->getHealth());
-        $this->takeActions($game, $v, [5, "Go Thrillseeking"]);
+        $this->takeActions($game, $v, [$forestSceneId, "Go Thrillseeking"]);
         $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
 
         // Attack until someone dies.
@@ -214,6 +233,6 @@ class ModuleTest extends ModuleTestCase
         $this->assertNotHasAction($v, ["getTitle", "Search for a fight"], "Fight");
         $this->assertNotHasAction($v, ["getTitle", "Go Thrillseeking"], "Fight");
         $this->assertNotHasAction($v, ["getTitle", "Go Slumming"], "Fight");
-        $this->assertHasAction($v, ["getDestinationSceneId", 1], "Back");
+        $this->assertHasAction($v, ["getDestinationSceneId", "20000000-0000-0000-0000-000000000001"], "Back");
     }
 }

@@ -71,6 +71,7 @@ class Creature extends BasicEnemy implements CreateableInterface
 
     public function __construct()
     {
+        parent::__construct();
         $this->bufflist = new BuffList(new ArrayCollection());
     }
 

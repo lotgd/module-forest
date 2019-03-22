@@ -98,7 +98,7 @@ class Forest
      * @param int $forestid
      * @return EventContext
      */
-    public static function handleMainForest(Game $g, EventContext $context, int $forestid): EventContext
+    public static function handleMainForest(Game $g, EventContext $context, string $forestid): EventContext
     {
         /** @var Viewpoint $v */
         $v = $context->getDataField("viewpoint");
