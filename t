@@ -1,2 +1,2 @@
 #!/bin/bash -ex
-phpunit
+vendor/bin/phpunit
