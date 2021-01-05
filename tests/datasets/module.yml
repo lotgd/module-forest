@@ -52,23 +52,40 @@ scenes:
   -
     id: "20000000-0000-0000-0000-000000000001"
     title: "Village"
-    description: "The village square hustles and bustles. No one really notices that you're are standing there. You see various shops and businesses along main street. There is a curious looking rock to one side. On every side the village is surrounded by deep dark forest."
-    template: 'lotgd/module-village/village'
+    description: "You arrive in a village."
+    template: "LotGD\\Module\\Village\\SceneTemplates\\VillageScene"
   -
     id: "20000000-0000-0000-0000-000000000003"
     title: "It is a new day!"
     description: "It is a new day."
-    template: "lotgd/module-new-day/newDay"
+    template: "LotGD\\Module\\NewDay\\SceneTemplates\\NewDayScene"
   -
     id: "20000000-0000-0000-0000-000000000004"
     title: "Continue"
     description: "Continue."
-    template: "lotgd/module-new-day/restoration"
+    template: "LotGD\\Module\\NewDay\\SceneTemplates\\ContinueScene"
   -
     id: "20000000-0000-0000-0000-000000000002"
     title: "A fight!"
     description: ""
-    template: "lotgd/module-res-fight/battle"
+    template: "LotGD\\Module\\NewDay\\SceneTemplates\\BattleScene"
+scene_templates:
+  -
+    class: "LotGD\\Module\\Village\\SceneTemplates\\VillageScene"
+    module: "lotgd/module-village"
+    userAssignable: false
+  -
+    class: "LotGD\\Module\\NewDay\\SceneTemplates\\NewDayScene"
+    module: "lotgd/module-new-day"
+    userAssignable: false
+  -
+    class: "LotGD\\Module\\NewDay\\SceneTemplates\\ContinueScene"
+    module: "lotgd/module-new-day"
+    userAssignable: false
+  -
+    class: "LotGD\\Module\\NewDay\\SceneTemplates\\BattleScene"
+    module: "lotgd/module-res-fight"
+    userAssignable: false
 scene_connections:
   -
     directionality: 1
