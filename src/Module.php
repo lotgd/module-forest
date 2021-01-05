@@ -13,14 +13,14 @@ use LotGD\Core\Models\Scene;
 use LotGD\Module\Village\Module as VillageModule;
 use LotGD\Module\Res\Fight\Module as FightModule;
 use LotGD\Module\Forest\Models\Creature;
-use LotGD\Module\Forest\Scenes\Forest;
-use LotGD\Module\Forest\Scenes\Healer;
+use LotGD\Module\Forest\SceneTemplates\Forest;
+use LotGD\Module\Forest\SceneTemplates\Healer;
 
 class Module implements ModuleInterface {
-    const ModuleIdentifier = "lotgd/module-forest";
+    const Module = "lotgd/module-forest";
 
-    const BattleContext = self::ModuleIdentifier . "/battle";
-    const HookForestNavigation = "h/" . self::ModuleIdentifier . "/forest-navigation";
+    const BattleContext = self::Module . "/battle";
+    const HookForestNavigation = "h/" . self::Module . "/forest-navigation";
     const GeneratedSceneProperty = "generatedScenes";
 
     public static function handleEvent(Game $g, EventContext $context): EventContext

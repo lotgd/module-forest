@@ -7,7 +7,7 @@ use LotGD\Core\Events\EventContext;
 use LotGD\Core\Events\EventContextData;
 use LotGD\Core\Game;
 use LotGD\Core\Models\Character;
-use LotGD\Module\Forest\Scenes\Fight;
+use LotGD\Module\Forest\SceneTemplates\Fight;
 use LotGD\Module\Res\Fight\Tests\helpers\EventRegistry;
 use LotGD\Module\Res\Fight\Module as ResFightModule;
 
@@ -39,7 +39,7 @@ class ModuleTest extends ModuleTestCase
         $em = $this->getEntityManager();
         $game = $this->g; /* @var Game $game */
 
-        $module = $game->getModuleManager()->getModule(Module::ModuleIdentifier);
+        $module = $game->getModuleManager()->getModule(Module::Module);
         $scenes = $module->getProperty(Module::GeneratedSceneProperty);
         return [$scenes["forest"][0], $scenes["healer"][0]];
     }

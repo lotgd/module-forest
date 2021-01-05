@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace LotGD\Module\Forest\Scenes;
+namespace LotGD\Module\Forest\SceneTemplates;
 
 use Composer\Script\Event;
 use LotGD\Core\Action;
@@ -17,20 +17,22 @@ use LotGD\Core\Models\Scene;
 use LotGD\Core\Models\SceneConnectable;
 use LotGD\Core\Models\SceneConnection;
 use LotGD\Core\Models\SceneConnectionGroup;
+use LotGD\Core\Models\SceneTemplate;
 use LotGD\Core\Models\Viewpoint;
+use LotGD\Core\SceneTemplates\SceneTemplateInterface;
 use LotGD\Module\Res\Fight\Fight;
 use LotGD\Module\Res\Fight\Models\CharacterResFightExtension;
 use LotGD\Module\Res\Fight\Module as ResFightModule;
 
 use LotGD\Module\Forest\Managers\CreatureManager;
 use LotGD\Module\Forest\Models\Creature;
-use LotGD\Module\Forest\Module as ForestModule;
+use LotGD\Module\Forest\Module;
 
 /**
  * Class Forest, contains helper methods for forest events
  * @package LotGD\Module\Forest\Scene
  */
-class Forest
+class Forest implements SceneTemplateInterface
 {
     const Template = "lotgd/module-forest/forest";
     const Groups = [
@@ -39,6 +41,11 @@ class Forest
         "back" => ["lotgd/module-forest/forest/back", "Back"],
     ];
 
+    public static function getNavigationEvent(): string
+    {
+        return self::Template;
+    }
+
     /**
      * Creates the scene template
      * @return array
@@ -46,7 +53,7 @@ class Forest
     public static function create(): array
     {
         $forestScene = Scene::create([
-            "template" => self::Template,
+                "template" => new SceneTemplate(self::class, Module::Module),
             "title" => "The Forest",
             "description" => "The Forest, home to evil creatures and evildoers of all sorts.
             
@@ -128,7 +135,7 @@ class Forest
         }
 
         $hookData = $g->getEventManager()->publish(
-            ForestModule::HookForestNavigation,
+            Module::HookForestNavigation,
             ViewpointDecorationEventData::create(["viewpoint" => $v])
         );
 
@@ -185,7 +192,7 @@ class Forest
                 break;
         }
 
-        $fight = Fight::start($g, $creature, $v->getScene(), ForestModule::BattleContext);
+        $fight = Fight::start($g, $creature, $v->getScene(), Module::BattleContext);
         $fight->showFightActions();
         $fight->suspend();
 
@@ -202,7 +209,7 @@ class Forest
     {
         $battleIdentifier = $context->getDataField("battleIdentifier");
 
-        if ($battleIdentifier == ForestModule::BattleContext) {
+        if ($battleIdentifier == Module::BattleContext) {
             /** @var Battle $battle */
             $battle = $context->getDataField("battle");
             $viewpoint = $context->getDataField("viewpoint");

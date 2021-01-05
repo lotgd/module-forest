@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace LotGD\Module\Forest\Scenes;
+namespace LotGD\Module\Forest\SceneTemplates;
 
 use LotGD\Core\Action;
 use LotGD\Core\ActionGroup;
@@ -10,20 +10,29 @@ use LotGD\Core\Game;
 use LotGD\Core\Models\Character;
 use LotGD\Core\Models\Scene;
 use LotGD\Core\Models\SceneConnectionGroup;
+use LotGD\Core\Models\SceneTemplate;
 use LotGD\Core\Models\Viewpoint;
+use LotGD\Core\SceneTemplates\SceneTemplateInterface;
+
+use LotGD\Module\Forest\Module;
 
 /**
  * Handles Scenes related to the Healer's Hut
  * Class Healer
  * @package LotGD\Module\Forest\Scenes
  */
-class Healer
+class Healer implements SceneTemplateInterface
 {
     const Template = "lotgd/module-forest/healer";
     const Groups = [
         "healing" => ["lotgd/module-forest/healer/healing", "Potions"],
         "back" => ["lotgd/module-forest/healer/back", "Back"],
     ];
+
+    public static function getNavigationEvent(): string
+    {
+        return self::Template;
+    }
 
     /**
      * Creates a Healer's Hut scene.
@@ -32,7 +41,7 @@ class Healer
     public static function create(): Scene
     {
         $scene = Scene::create([
-                "template" => self::Template,
+                "template" => new SceneTemplate(self::class, Module::Module),
                 "title" => "Healer's Hut",
                 "description" => "You duck into the small smoke-filled grass hut.
                 The pungent aroma makes you cough, attracting the attention of a grizzled old person that
