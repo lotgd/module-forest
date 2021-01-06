@@ -68,7 +68,7 @@ scenes:
     id: "20000000-0000-0000-0000-000000000002"
     title: "A fight!"
     description: ""
-    template: "LotGD\\Module\\NewDay\\SceneTemplates\\BattleScene"
+    template: "LotGD\\Module\\Res\\Fight\\SceneTemplates\\BattleScene"
 scene_templates:
   -
     class: "LotGD\\Module\\Village\\SceneTemplates\\VillageScene"
@@ -83,7 +83,7 @@ scene_templates:
     module: "lotgd/module-new-day"
     userAssignable: false
   -
-    class: "LotGD\\Module\\NewDay\\SceneTemplates\\BattleScene"
+    class: "LotGD\\Module\\Res\\Fight\\SceneTemplates\\BattleScene"
     module: "lotgd/module-res-fight"
     userAssignable: false
 scene_connections:

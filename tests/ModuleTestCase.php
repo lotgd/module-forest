@@ -57,10 +57,13 @@ class ModuleTestCase extends ModelTestCase
 
     public function tearDown(): void
     {
+        $this->g->getEntityManager()->flush();
+        $this->g->getEntityManager()->clear();
+
         Module::onUnregister($this->g, $this->moduleModel);
         $m = $this->getEntityManager()->getRepository(ModuleModel::class)->find(self::Library);
         if ($m) {
-            $m->delete($this->getEntityManager());
+            $this->getEntityManager()->remove($m);
         }
 
         $this->g->getEntityManager()->flush();

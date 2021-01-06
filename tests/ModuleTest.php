@@ -7,6 +7,7 @@ use LotGD\Core\Events\EventContext;
 use LotGD\Core\Events\EventContextData;
 use LotGD\Core\Game;
 use LotGD\Core\Models\Character;
+use LotGD\Core\Models\Scene;
 use LotGD\Module\Forest\SceneTemplates\Fight;
 use LotGD\Module\Res\Fight\Tests\helpers\EventRegistry;
 use LotGD\Module\Res\Fight\Module as ResFightModule;
@@ -17,6 +18,9 @@ class ModuleTest extends ModuleTestCase
 {
     const Library = 'lotgd/module-forest';
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testHandleUnknownEvent()
     {
         // Always good to test a non-existing event just to make sure nothing happens :).
