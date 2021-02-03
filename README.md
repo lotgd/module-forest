@@ -1,5 +1,5 @@
 # Forest module
-[![Build Status](https://travis-ci.org/lotgd/module-forest.svg?branch=master)](https://travis-ci.org/lotgd/module-forest)
+![Tests](https://github.com/lotgd/module-forest/workflows/Tests/badge.svg)
 
 This module provides a forest scene template for characters to engane in combat
 in varying degrees of difficulties. It also provides a Healer's Hut, where characters
