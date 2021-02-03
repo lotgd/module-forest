@@ -1,10 +1,11 @@
-# module-forest
+# Forest module
 [![Build Status](https://travis-ci.org/lotgd/module-forest.svg?branch=master)](https://travis-ci.org/lotgd/module-forest)
 
-This module provides a forest and a healer's hut where characters can engage in combat in a 
-varying degree of difficulties.
+This module provides a forest scene template for characters to engane in combat
+in varying degrees of difficulties. It also provides a Healer's Hut, where characters
+can heal themselves.
 
 ## API
 ### Events and hooks
 - `h/lotgd/module-forest/forest-navigation` (`Module::HookForestNavigation`)\
-This hook can be used to extend the forest navigation. The only variable it provides is the viewpoint.
+  This hook can be used to extend the forest navigation. The only variable it provides is the viewpoint.
