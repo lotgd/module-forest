@@ -60,9 +60,9 @@ class Module implements ModuleInterface {
             [$forestScene, $healerScene] = Forest::create();
 
             // Connect forest to the village
-            if ($villageScene->hasConnectionGroup(VillageModule::Groups[0])) {
+            if ($villageScene->hasConnectionGroup(VillageScene::Groups[0])) {
                 $villageScene
-                    ->getConnectionGroup(VillageModule::Groups[0])
+                    ->getConnectionGroup(VillageScene::Groups[0])
                     ->connect($forestScene->getConnectionGroup(Forest::Groups["back"][0]));
             } else {
                 $villageScene->connect($forestScene->getConnectionGroup(Forest::Groups["back"][0]));
@@ -81,7 +81,7 @@ class Module implements ModuleInterface {
 
         // Read in creatures
         $file = new SplFileObject(__DIR__ . "/../res/creatures.tsv");
-        $titles = $file->fgetc("\t"); // must fetch title line first
+        $titles = $file->fgetcsv("\t"); // must fetch title line first
         while (!$file->eof()) {
             $data = $file->fgetcsv("\t");
             $data = [
