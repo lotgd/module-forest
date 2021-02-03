@@ -68,12 +68,15 @@ class ModuleTest extends ModuleTestCase
         $action = $v->getActionGroups()[0]->getActions()[0];
         $game->takeAction($action->getId());
         $this->assertSame("Village", $v->getTitle());
-        $action = $this->assertHasAction($v, ["getDestinationSceneId", $forestSceneId], "Outside");
+
+        $this->assertHasAction($v, ["getDestinationSceneId", $forestSceneId], "Outside");
+        $action = $this->getAction($v, ["getDestinationSceneId", $forestSceneId], "Outside");
 
         // Go to the forest
         $game->takeAction($action->getId());
         $this->assertSame("The Forest", $v->getTitle());
-        $action = $this->assertHasAction($v, ["getDestinationSceneId", $healerSceneId], "Healing");
+        $this->assertHasAction($v, ["getDestinationSceneId", $healerSceneId], "Healing");
+        $action = $this->getAction($v, ["getDestinationSceneId", $healerSceneId], "Healing");
         $this->assertHasAction($v, ["getTitle", "Search for a fight"], "Fight");
         $this->assertHasAction($v, ["getTitle", "Go Thrillseeking"], "Fight");
         $this->assertHasAction($v, ["getTitle", "Go Slumming"], "Fight");
@@ -81,16 +84,19 @@ class ModuleTest extends ModuleTestCase
         // Go to the healer.
         $game->takeAction($action->getId());
         $this->assertSame("Healer's Hut", $v->getTitle());
-        $action = $this->assertHasAction($v, ["getDestinationSceneId", $forestSceneId], "Back");
+        $this->assertHasAction($v, ["getDestinationSceneId", $forestSceneId], "Back");
+        $action = $this->getAction($v, ["getDestinationSceneId", $forestSceneId], "Back");
 
         // Back to the forest
         $game->takeAction($action->getId());
         $this->assertSame("The Forest", $v->getTitle());
-        $action = $this->assertHasAction($v, ["getTitle", "Search for a fight"], "Fight");
+        $this->assertHasAction($v, ["getTitle", "Search for a fight"], "Fight");
+        $action = $this->getAction($v, ["getTitle", "Search for a fight"], "Fight");
 
         // Start a fight.
         $game->takeAction($action->getId());
-        $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
+        $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
+        $action = $this->getAction($v, ["getTitle", "Attack"], "Fight");
 
         // Save experience first.
         $currentExp = $character->getProperty(ResFightModule::CharacterPropertyCurrentExperience, 0);
@@ -100,7 +106,8 @@ class ModuleTest extends ModuleTestCase
             $game->takeAction($action->getId());
 
             if ($character->getProperty(ResFightModule::CharacterPropertyBattleState) !== null){
-                $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
+                $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
+                $action = $this->getAction($v, ["getTitle", "Attack"], "Fight");
             } else {
                 break;
             }
@@ -110,13 +117,15 @@ class ModuleTest extends ModuleTestCase
         $this->assertGreaterThan($currentExp, $character->getProperty(ResFightModule::CharacterPropertyCurrentExperience, 0));
 
         // Now go to healing.
-        $action = $this->assertHasAction($v, ["getDestinationSceneId", $healerSceneId], "Healing");
+        $this->assertHasAction($v, ["getDestinationSceneId", $healerSceneId], "Healing");
+        $action = $this->getAction($v, ["getDestinationSceneId", $healerSceneId], "Healing");
         $game->takeAction($action->getId());
         $this->assertSame("Healer's Hut", $v->getTitle());
 
         // Assert that we are not completely healed.
         $this->assertLessThan($character->getMaxHealth(), $character->getHealth());
-        $action = $this->assertHasAction($v, ["getTitle", "Complete Healing"], "Potions");
+        $this->assertHasAction($v, ["getTitle", "Complete Healing"], "Potions");
+        $action = $this->getAction($v, ["getTitle", "Complete Healing"], "Potions");
         $game->takeAction($action->getId());
         // Assert we are.
         $this->assertEquals($character->getMaxHealth(), $character->getHealth());
@@ -213,7 +222,8 @@ class ModuleTest extends ModuleTestCase
         // Take actions
         $this->assertSame(1, $character->getHealth());
         $this->takeActions($game, $v, [$forestSceneId, "Go Thrillseeking"]);
-        $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
+        $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
+        $action = $this->getAction($v, ["getTitle", "Attack"], "Fight");
 
         // Attack until someone dies.
         // Make sure we die.
@@ -222,7 +232,8 @@ class ModuleTest extends ModuleTestCase
             $game->takeAction($action->getId());
 
             if ($character->getProperty(ResFightModule::CharacterPropertyBattleState) !== null){
-                $action = $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
+                $this->assertHasAction($v, ["getTitle", "Attack"], "Fight");
+                $action = $this->getAction($v, ["getTitle", "Attack"], "Fight");
             } else {
                 break;
             }
