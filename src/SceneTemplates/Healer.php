@@ -29,6 +29,8 @@ class Healer implements SceneTemplateInterface
         "back" => ["lotgd/module-forest/healer/back", "Back"],
     ];
 
+    private static ?SceneTemplate $template = null;
+
     public static function getNavigationEvent(): string
     {
         return self::Template;
@@ -40,14 +42,20 @@ class Healer implements SceneTemplateInterface
      */
     public static function create(): Scene
     {
-        $scene = Scene::create([
-                "template" => new SceneTemplate(self::class, Module::Module),
-                "title" => "Healer's Hut",
-                "description" => "You duck into the small smoke-filled grass hut.
+        if (self::$template === null) {
+            self::$template = new SceneTemplate(self::class, Module::Module);
+        }
+
+        $scene = new Scene(
+            title: "Healer's Hut",
+            description: <<<TXT
+                You duck into the small smoke-filled grass hut.
+                
                 The pungent aroma makes you cough, attracting the attention of a grizzled old person that
                 does a remarkable job of reminding you of a rock, which probably explains why you didn't 
-                notice them until now. Couldn't be your failure as a warrior. Nope, definitely not.",
-            ]
+                notice them until now. Couldn't be your failure as a warrior. Nope, definitely not."
+            TXT,
+            template: self::$template,
         );
 
         foreach (self::Groups as $key => $val) {

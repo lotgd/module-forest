@@ -41,6 +41,8 @@ class Forest implements SceneTemplateInterface
         "back" => ["lotgd/module-forest/forest/back", "Back"],
     ];
 
+    private static ?SceneTemplate $template = null;
+
     public static function getNavigationEvent(): string
     {
         return self::Template;
@@ -52,18 +54,23 @@ class Forest implements SceneTemplateInterface
      */
     public static function create(): array
     {
-        $forestScene = Scene::create([
-                "template" => new SceneTemplate(self::class, Module::Module),
-            "title" => "The Forest",
-            "description" => "The Forest, home to evil creatures and evildoers of all sorts.
-            
-    The thick foliage of the forest restricts your view to only a few yards in most places.
-    The paths would be imperceptible except for your trained eye.
-    You move silently as a soft breeze across the thick moss covering the ground, wary to
-    avoid stepping on a twig or any of the numerous pieces of bleached bone that populate
-    the forest floor, lest you betray your presence to one of the vile beasts that wander
-    the forest.",
-            ]
+        if (self::$template === null) {
+            self::$template = new SceneTemplate(self::class, Module::Module);
+        }
+
+        $forestScene = new Scene(
+            title: "The Forest",
+            description: <<<TXT
+                The Forest, home to evil creatures and evildoers of all sorts.
+                        
+                The thick foliage of the forest restricts your view to only a few yards in most places.
+                The paths would be imperceptible except for your trained eye.
+                You move silently as a soft breeze across the thick moss covering the ground, wary to
+                avoid stepping on a twig or any of the numerous pieces of bleached bone that populate
+                the forest floor, lest you betray your presence to one of the vile beasts that wander
+                the forest."
+            TXT,
+            template: self::$template,
         );
 
         foreach (self::Groups as $key => $val) {

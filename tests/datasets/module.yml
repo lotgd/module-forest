@@ -55,6 +55,11 @@ scenes:
     description: "You arrive in a village."
     template: "LotGD\\Module\\Village\\SceneTemplates\\VillageScene"
   -
+    id: "20000000-0000-0000-0000-000000000005"
+    title: "The other village"
+    description: "You arrive in the other village."
+    template: "LotGD\\Module\\Village\\SceneTemplates\\VillageScene"
+  -
     id: "20000000-0000-0000-0000-000000000003"
     title: "It is a new day!"
     description: "It is a new day."
