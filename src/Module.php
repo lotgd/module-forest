@@ -27,10 +27,10 @@ class Module implements ModuleInterface {
     const HookForestNavigation = "h/" . self::Module . "/forest-navigation";
 
     // Module properties
-    const GeneratedSceneProperty = self::Module . "/generatedScenes";
-    const ExperienceBonusFactorProperty = self::Module . "/experienceBonus";
+    const GeneratedSceneProperty = "generatedScenes";
+    const ExperienceBonusFactorProperty = "experienceBonus";
     const ExperienceBonusFactorPropertyDefault = 0.25;
-    const ExperienceMalusFactorProperty = self::Module . "/experienceMalus";
+    const ExperienceMalusFactorProperty = "experienceMalus";
     const ExperienceMalusFactorPropertyDefault = 0.25;
 
     public static function handleEvent(Game $g, EventContext $context): EventContext
@@ -216,10 +216,10 @@ class Module implements ModuleInterface {
         }
 
         // Read in creatures
-        $file = new SplFileObject(__DIR__ . "/../res/creatures.tsv");
-        $titles = $file->fgetcsv("\t"); // must fetch title line first
+        $file = new SplFileObject(__DIR__ . "/../res/creatures.csv");
+        $titles = $file->fgetcsv(","); // must fetch title line first
         while (!$file->eof()) {
-            $data = $file->fgetcsv("\t");
+            $data = $file->fgetcsv(",");
             $creature = new Creature(
                 name: $data[0],
                 weapon: $data[1],
