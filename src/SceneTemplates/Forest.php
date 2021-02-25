@@ -215,6 +215,7 @@ class Forest implements SceneTemplateInterface
     public static function handleBattleOverEvent(Game $g, EventContext $context): EventContext
     {
         $battleIdentifier = $context->getDataField("battleIdentifier");
+        $module = $g->getModuleManager()->getModule(Module::Module);
 
         if ($battleIdentifier == Module::BattleContext) {
             /** @var Battle $battle */
@@ -224,20 +225,46 @@ class Forest implements SceneTemplateInterface
             $character = $g->getCharacter();;
 
             if ($battle->getWinner() === $character) {
-                // gain experience
                 $monster = $battle->getMonster();
+
+                // Calculate how much experience the user earns.
                 if ($monster instanceof Creature) {
-                    $experienceGained = $monster->getExperience($character);
+                    [$experienceGained, $bonusExperience] = $monster->getExperience(
+                        $character,
+                        bonusFactor: $module->getProperty(
+                            name: Module::ExperienceBonusFactorProperty,
+                            default: Module::ExperienceBonusFactorPropertyDefault
+                        ),
+                        malusFactor: $module->getProperty(
+                            name: Module::ExperienceMalusFactorProperty,
+                            default: Module::ExperienceMalusFactorPropertyDefault
+                        ),
+                    );
                 } else {
                     $experienceGained = 0;
+                    $bonusExperience = 0;
                 }
 
+                // Reward experience to the user
                 $character->rewardExperience($experienceGained);
 
                 // Decorate viewpoint
                 $viewpoint->setTitle("You won!");
+
+                if ($bonusExperience < 0) {
+                    $viewpoint->addDescriptionParagraph(sprintf(
+                        "As this battle was not challenging for you, you lose %s experience from your reward.",
+                        abs($bonusExperience)
+                    ));
+                } elseif ($bonusExperience > 0) {
+                    $viewpoint->addDescriptionParagraph(sprintf(
+                        "Due to the difficulty of this battle, you gain additional %s experience.",
+                        abs($bonusExperience)
+                    ));
+                }
+
                 $viewpoint->addDescriptionParagraph(sprintf(
-                    "You defeated %s. You gain %s experience.",
+                    "You defeated %s. You gain %s experience in total.",
                     $battle->getLoser()->getDisplayName(),
                     $experienceGained
                 ));

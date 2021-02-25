@@ -52,7 +52,6 @@ class ModuleTestCase extends ModelTestCase
         Module::onRegister($this->g, $this->moduleModel);
 
         $this->g->getEntityManager()->flush();
-        $this->g->getEntityManager()->clear();
     }
 
     public function tearDown(): void

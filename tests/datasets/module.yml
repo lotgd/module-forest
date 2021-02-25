@@ -151,3 +151,15 @@ event_subscriptions:
     pattern: "#h/lotgd/module-res-fight/battleOver#"
     class: "LotGD\\Module\\Forest\\Module"
     library: "lotgd/module-forest"
+  -
+    pattern: "#h/lotgd/core/cli/module-config-list/lotgd/module-forest#"
+    class: "LotGD\\Module\\Forest\\Module"
+    library: "lotgd/module-forest"
+  -
+    pattern: "#h/lotgd/core/cli/module-config-set/lotgd/module-forest#"
+    class: "LotGD\\Module\\Forest\\Module"
+    library: "lotgd/module-forest"
+  -
+    pattern: "#h/lotgd/core/cli/module-config-reset/lotgd/module-forest#"
+    class: "LotGD\\Module\\Forest\\Module"
+    library: "lotgd/module-forest"

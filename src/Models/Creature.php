@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace LotGD\Module\Forest\Models;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
+use JetBrains\PhpStorm\ArrayShape;
 use LotGD\Core\BuffList;
 use LotGD\Core\Game;
 use LotGD\Core\Models\BasicEnemy;
@@ -20,9 +22,8 @@ use LotGD\Core\Tools\Model\Deletor;
  * @Entity
  * @Table(name="Creatures")
  */
-class Creature extends BasicEnemy implements CreateableInterface
+class Creature extends BasicEnemy
 {
-    use Creator;
     use Deletor;
 
     /** @Column(type="string") */
@@ -56,22 +57,22 @@ class Creature extends BasicEnemy implements CreateableInterface
         18 => 249,
     ];
 
-
-    /**
-     * @var array
-     */
-    private static $fillable = [
-        "name",
-        "weapon",
-        "level",
-        "attack",
-        "defense",
-        "maxHealth"
-    ];
-
-    public function __construct()
-    {
+    public function __construct(
+        string $name,
+        string $weapon,
+        int $level = 1,
+        int $attack = 1,
+        int $defense = 1,
+        int $maxHealth = 10,
+    ) {
         parent::__construct();
+
+        $this->name = $name;
+        $this->level = $level;
+        $this->weapon = $weapon;
+        $this->attack = $attack;
+        $this->defense = $defense;
+        $this->maxHealth = $maxHealth;
         $this->bufflist = new BuffList(new ArrayCollection());
     }
 
@@ -191,29 +192,45 @@ class Creature extends BasicEnemy implements CreateableInterface
     /**
      * Returns the experience earned through this monster with character scaling.
      * @param Character $character
-     * @return int
+     * @param float $bonusFactor
+     * @param float $malusFactor
+     * @return array
      */
-    public function getExperience(Character $character): int
-    {
+    #[ArrayShape(['int', 'float'])]
+    public function getExperience(
+        Character $character,
+        float $bonusFactor = 0,
+        float $malusFactor = 0,
+    ): array {
         $levelDifference = $this->level - $character->getLevel();
 
-        if (isset($experienceTable[$this->level])) {
-            $experience = $experienceTable[$this->level];
+        // Get default experience from a simple table lookup.
+        // ToDo: Make this configurable per creature
+        if (isset(self::ExperienceTable[$this->level])) {
+            $experience = self::ExperienceTable[$this->level];
         } else {
             $experience = 0;
         }
 
+        // Reward fights against stronger monsters, punish for slaying weaker ones.
+        $bonusExperience = 0;
         if ($levelDifference < 0) {
-            $modifier = -0.25 * $levelDifference;
-        } else {
-            $modifier = 0.1 * $levelDifference;
+            // Because levelDifference is negative, bonusExperience is negative, too.
+            $bonusExperience = $experience * $malusFactor * $levelDifference;
+        } elseif ($levelDifference > 0) {
+            // Because levelDifference is positive, bonusExperience will be positive, too.
+            $bonusExperience = $experience * $bonusFactor * $levelDifference;
         }
 
-        $experience = (int)round($experience * $modifier);
+        $bonusExperience = (int)round($bonusExperience, 0);
+
+        // Calculate the actual amount of experience earned.
+        $experience = $experience + $bonusExperience;
+
         if ($experience <= 0) {
             $experience = 1;
         }
 
-        return $experience;
+        return [$experience, $bonusExperience];
     }
 }

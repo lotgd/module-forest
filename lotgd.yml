@@ -3,3 +3,6 @@ subscriptionPatterns:
   - "#h/lotgd/core/navigate-to/lotgd/module-forest/forest#"
   - "#h/lotgd/core/navigate-to/lotgd/module-forest/healer#"
   - "#h/lotgd/module-res-fight/battleOver#"
+  - "#h/lotgd/core/cli/module-config-list/lotgd/module-forest#"
+  - "#h/lotgd/core/cli/module-config-set/lotgd/module-forest#"
+  - "#h/lotgd/core/cli/module-config-reset/lotgd/module-forest#"
