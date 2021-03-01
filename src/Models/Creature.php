@@ -27,14 +27,19 @@ class Creature extends BasicEnemy
     use Deletor;
 
     /** @Column(type="string") */
-    protected $weapon;
+    protected string $weapon;
     /** @Column(type="integer") */
-    protected $attack;
+    protected int $attack;
     /** @Column(type="integer") */
-    protected $defense;
+    protected int $defense;
     /** @Column(type="integer") */
-    protected $maxHealth;
-    protected $bufflist;
+    protected int $maxHealth;
+    /** @Column(type="integer", nullable=True, options={"unsigned": true}) */
+    protected ?int $gold = null;
+    /** @Column(type="integer", nullable=True, options={"unsigned": true}) */
+    protected ?int $experience = null;
+
+    protected ?BuffList $bufflist = null;
 
     const ExperienceTable = [
         1 => 14,
@@ -57,6 +62,27 @@ class Creature extends BasicEnemy
         18 => 249,
     ];
 
+    const GoldTable = [
+        1 => 36,
+        2 => 97,
+        3 => 148,
+        4 => 162,
+        5 => 198,
+        6 => 234,
+        7 => 268,
+        8 => 302,
+        9 => 336,
+        10 => 369,
+        11 => 402,
+        12 => 435,
+        13 => 467,
+        14 => 499,
+        15 => 531,
+        16 => 563,
+        17 => 36,
+        18 => 0,
+    ];
+
     public function __construct(
         string $name,
         string $weapon,
@@ -64,6 +90,8 @@ class Creature extends BasicEnemy
         int $attack = 1,
         int $defense = 1,
         int $maxHealth = 10,
+        int $experience = null,
+        int $gold = null,
     ) {
         parent::__construct();
 
@@ -73,6 +101,8 @@ class Creature extends BasicEnemy
         $this->attack = $attack;
         $this->defense = $defense;
         $this->maxHealth = $maxHealth;
+        $this->experience = $experience;
+        $this->gold = $gold;
         $this->bufflist = new BuffList(new ArrayCollection());
     }
 
@@ -197,7 +227,7 @@ class Creature extends BasicEnemy
      * @return array
      */
     #[ArrayShape(['int', 'float'])]
-    public function getExperience(
+    public function getScaledExperience(
         Character $character,
         float $bonusFactor = 0,
         float $malusFactor = 0,
@@ -232,5 +262,41 @@ class Creature extends BasicEnemy
         }
 
         return [$experience, $bonusExperience];
+    }
+
+    /**
+     * Returns the raw base experience.
+     * @return int
+     */
+    public function getExperience(): int
+    {
+        return $this->experience ?? (isset(self::ExperienceTable[$this->level]) ? self::ExperienceTable[$this->level] : 0);
+    }
+
+    /**
+     * Sets the experience gained from this creature.
+     * @param int|null $experience
+     */
+    public function setExperience(?int $experience): void
+    {
+        $this->experience = $experience;
+    }
+
+    /**
+     * Returns the amount of gold dropped by this enemy.
+     * @return int
+     */
+    public function getGold(): int
+    {
+        return $this->gold ?? (isset(self::GoldTable[$this->level]) ? self::GoldTable[$this->level] : 0);
+    }
+
+    /**
+     * Sets the amount of gold dropped by this enemy. Set to null to use default scaling.
+     * @param int|null $gold
+     */
+    public function setGold(?int $gold)
+    {
+        $this->gold = $gold;
     }
 }

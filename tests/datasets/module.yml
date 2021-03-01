@@ -163,3 +163,15 @@ event_subscriptions:
     pattern: "#h/lotgd/core/cli/module-config-reset/lotgd/module-forest#"
     class: "LotGD\\Module\\Forest\\Module"
     library: "lotgd/module-forest"
+  -
+    pattern: "#h/lotgd/core/cli/scene-config-list/lotgd/module-forest/forest#"
+    class: "LotGD\\Module\\Forest\\Module"
+    library: "lotgd/module-forest"
+  -
+    pattern: "#h/lotgd/core/cli/scene-config-set/lotgd/module-forest/forest#"
+    class: "LotGD\\Module\\Forest\\Module"
+    library: "lotgd/module-forest"
+  -
+    pattern: "#h/lotgd/core/cli/scene-config-reset/lotgd/module-forest/forest#"
+    class: "LotGD\\Module\\Forest\\Module"
+    library: "lotgd/module-forest"

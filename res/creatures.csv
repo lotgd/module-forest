@@ -1,191 +1,191 @@
-name,weapon,level,attack,defense,maxHealth
-Thieving Kender,Whirling Hoopack,1,1,1,10
-Rude Student,Worn Textbook,1,1,1,10
-Baby Unicorn,Blunt Horn,1,1,1,10
-Small Purple Mouse,Lashing pink tail,1,1,1,10
-Grunting Piggy,Wiggly Snout,1,1,1,10
-Dumb Old Eyesore,Nagging complaints,2,3,3,21
-Pygmy Marmoset,Pieces of treebark,2,3,3,21
-Burly Man,Amazing Absorbency,15,29,21,155
-Screaming Banschee,Hauntingly Beautiful Voice,2,3,3,21
-Ursus Minor,Twinkling Lights,2,3,3,21
-Stone Troll,Gaping  Maw,2,3,3,21
-Slithering asp,Hypnotic eyes,2,3,3,21
-Windan The Barbarian,Feathered Spear,2,3,3,21
-Studious young sorceror,Newly memorized spells,2,3,3,21
-Four and Twenty Blackbirds,Freshly Baked Pies,3,5,4,32
-Amazon,Bow and Arrow,3,5,4,32
-Overbearing mother,9pm Curfew,3,5,4,32
-Huge Bald Programmer,Shining Forehead,3,5,4,32
-Someone's Grandfather,Stories that go nowhere,3,5,4,32
-Juvenile Delinquent,Poor Attitude,3,5,4,32
-Beautiful Woodland Sprite,Kindness and tranquility,3,5,4,32
-Society Belle,Southern Charm,3,5,4,32
-Giant Goldfish Cracker,Annoying Commercial Jingles,3,5,4,32
-An Angry Mob,Torches,4,7,6,43
-Polar Bear,Terrible claws,4,7,6,43
-Decaying Skeleton,Rusty Sword,4,7,6,43
-Willie the Wonder Hampster,Nuclear Sunflower Seeds,4,7,6,43
-Winged Demon Of Death,Red Glare,4,7,6,43
-Small Dragon,Hot air,4,7,6,43
-Monstrous Dustbunny,Sneezing fits,4,7,6,43
-Small Rabbit,Sharp Pointy Teeth,4,7,6,43
-Mature Unicorn,Powerful Horn,5,9,7,53
-Gnome Necromancer,Skeleton Familiar,5,9,7,53
-Purple Dinosaur,Helpful Nature,5,9,7,53
-Orc Emmisary,Diplomacy,5,9,7,53
-A Dark Spiritling,Dark Magic,5,9,7,53
-An Enchanted Toilet,Ninja Flushing Action,5,9,7,53
-Giant Water Elemental,Torrential Downpours,5,9,7,53
-Violins,Off-Key notes,5,9,7,53
-Whirled Peas,Green Slime,5,9,7,53
-Magic Mushroom,Swirling Colors,6,11,8,64
-Invisible Man,Something Invisible and Sharp,6,11,8,64
-Clown Of Death,Balloon Animals from Beyond,6,11,8,64
-Heart of Stone,Unromantic Thoughts,6,11,8,64
-Troll Warrior,Steel Broadsword,6,11,8,64
-Bettie the Amazing Kung-Fu Butterfly,Stupendous Kung-Fu Wings,6,11,8,64
-Golden Goose,14 Karat Gold Eggs,6,11,8,64
-Black Tiger,Claws,6,11,8,64
-Lambert the Sheepish Lion,Timid Growling,6,11,8,64
-Marsha of the Jungle,Trained Monkeys,7,13,10,74
-Moe,Two Knives,7,13,10,74
-Coffin,Terrifying Premonitions,7,13,10,74
-Green Alligator,Crushing Jaws,7,13,10,74
-"Lindsey, Daughter of Erin the Ninja Squirrel",A peanut-shooter,7,13,10,74
-Wizarding School Senior Student,Memory Charm,7,13,10,74
-Enchanted Laundry Basket,Stinky Socks of Terror,7,13,10,74
-Carrot Top,Phone Company Slogans,7,13,10,74
-Macintosh Computer,Amazingly Bright Colors,7,13,10,74
-Interior Designer,Color-coordinating Sword and Shield,8,15,11,84
-Daughter of the Devil,Sinfully Good Looks,8,15,11,84
-Wild Horses,Dragging,8,15,11,84
-Steam Elemental,Scalding jets of air,8,15,11,84
-Gordon the Cheese Eater,Odiferous Nature,8,15,11,84
-Narcoleptic,Drowsiness,8,15,11,84
-Swarm of Bees,Stinging,8,15,11,84
-Halfling Mage,Painful Spells,8,15,11,84
-Citizen of Eythgim Village,Slurs,9,17,13,94
-Old Hag,Red red rose,9,17,13,94
-Charging Buffalo,Stampeding Hoofs,9,17,13,94
-Pawn,Simple tactics,9,17,13,94
-Romulan,Wrong-Genre Confusion,9,17,13,94
-Large Griffon,Beak and Claws,9,17,13,94
-Cliche Bond Movie Villian,Cell-phone of Death,9,17,13,94
-Fuzzy Ferret,Disarming Cuteness,9,17,13,94
-Starving Artist,Pointy Paintbrushes,9,17,13,94
-Guard from Eythgim Village,Rapier,10,19,14,105
-Garden Gnome,Painful Tackiness,10,19,14,105
-Chicken,Squawking,10,19,14,105
-Marksman,Deadly Aim,10,19,14,105
-Enchanted Tissue Box,Cold Germs,10,19,14,105
-Ghostly Woodsman,Phantom Axe,10,19,14,105
-Zombie,Rotting Flesh,10,19,14,105
-Fortula the Plains Cat,Claws and Teeth,10,19,14,105
-Erin the Ninja Squirrel,Acorn tossing madness,10,19,14,105
-Bluebird of Happiness,Uplifting Melody,11,21,15,115
-Potato Newscaster,Personal Opinions,11,21,15,115
-Pygmy Dragon,Fire Breath,11,21,15,115
-Zealous Photographer,Flashing Lights,11,21,15,115
-Gary Larson,Strange Cartoons,11,21,15,115
-Soldier from Eythgim Village,Battle Cry,11,21,15,115
-80's Glam Rocker,Blinding Makeup,11,21,15,115
-Vigilante,Sack of Doorknobs,11,21,15,115
-The Devil,Eternal Damnation,11,21,15,115
-Mercenary,Blood-chilling stare,12,23,17,125
-Magic Mirror,Flattering Remarks,12,23,17,125
-Broadway Extra,Memorable Showtunes,12,23,17,125
-Butter the Sprite,Magic Pixie Dust,12,23,17,125
-Father Time,Old Age,12,23,17,125
-Eythgim Village Archers,Flaming Arrows,12,23,17,125
-Animate Stormcloud,Lightning,12,23,17,125
-Three Toed Sloth,Slow responses,12,23,17,125
-Death,Cold Grasp,12,23,17,125
-Cerberus,Three drooling maws,13,25,18,135
-"Man from the deep deep, dark dark, deep dark wood",Snarling and biting,13,25,18,135
-Devil in a blue dress,Alluring Promises,13,25,18,135
-A Giant,Smashing Club,13,25,18,135
-Commander of the Eythgim Army,Winning Tactics,13,25,18,135
-Ice Dragon,Frost Breath,13,25,18,135
-Pushmi Pullyew,Conflictory Arguments,13,25,18,135
-Whale,Tail,13,25,18,135
-Gorma The Leper,Contagious Disease,13,25,18,135
-Samurai Master,Daisho,14,27,20,145
-Bartender,Duck,14,27,20,145
-Prince of Eythgim Village,Bribes of gold,14,27,20,145
-Loch Ness Monster,Shocking appearance,14,27,20,145
-Fuzzie Wuzzie,Male Pattern Baldness,14,27,20,145
-Princess of Eythgim Village,Beguiling Words,15,29,21,155
-Ugly Harpy,Poisonus Breath,14,27,20,145
-Field Mouse,Chewing,14,27,20,145
-Monarch of Eythgim Village,Royal Commands,16,31,22,166
-Cyclops Warrior,Fire Eye,15,29,21,155
-Cupid,Pink Arrows of Love,15,29,21,155
-Tabloid Writer,Far-fetched stories,15,29,21,155
-Evil Wizard,Tormented Souls,15,29,21,155
-"Artemis, Goddess of the Hunt",Winged Stags,15,29,21,155
-Centaur Archer,Deadly marksmanship,15,29,21,155
-Mime,Something imaginary,15,29,21,155
-Chili Chef,Insanity Peppers,15,29,21,155
-Brownie,Minuscule weapons,16,31,22,166
-Darkness,Self-induced terror,16,31,22,166
-Mountain King,God-like fury,16,31,22,166
-Loneliness,Silence,17,0,0,1
-Loneliness,Silence,18,0,25,1
-Feline un chapeau,Rhyming Nonsense,15,29,21,155
-Whopper With Cheese,Abundant Cholesterol,8,15,11,84
-Swarming Ladybugs,Stinking Residue,3,5,4,32
-Football Fan,Raucous Cheers,6,11,8,64
-King Agrippa,Flaming Wingnuts,13,25,18,135
-Cherubically Charming Child,Curious Questions,1,1,1,10
-Haberdasher,Heavy Hat,5,9,7,53
-Rush Hour Driver,Road Rage,11,21,15,115
-Sorority Girl in Nightie,Pillow Fighting Action,7,13,10,74
-Ulysees Wölfgang,Ridiculous Lies,14,27,20,145
-Crazy Audrey,Ravenous Kittens,9,17,13,94
-Shining Happy People,Hand Holding Terror,5,9,7,53
-Elsabutt,Gravitational Pull,8,15,11,84
-Mr. Bear,Overwhelming Sleepiness,2,3,3,21
-Everquest Junkie,1337 Sp34k,12,23,17,125
-Little Cocobean,Her Special Roast,4,7,6,43
-Humongous Hairball,Incredible Drain-Clogging Power,5,9,7,53
-Iron Chef,Sizzling Eel Flambe!,4,7,6,43
-The Government,Taxes,7,13,10,74
-Bar Fly,Alcoholism,1,1,1,10
-Methane Man,Unfriendly Gasses,7,13,10,74
-Wooly Mammoth,Wildebeest Sidekick,8,15,11,84
-Nasty Nevin,Bossy Mom,10,19,14,105
-the Gar Man,Jar of Cotton Balls,3,5,4,32
-Hiker,Walking Stick,1,1,1,10
-Camper,Marshmallow-roasting Stick,2,3,3,21
-Forest Ranger,Hunting Rifle,3,5,4,32
-Tree-Hugger,Propaganda Leaflets,4,7,6,43
-Forest Dwelling Hermit,Hand-Made Sling,5,9,7,53
-Member of Dragon Lovers Anonymous,Stuffed Dragon Toy,6,11,8,64
-Initiate Dragon Watcher,Binoculars,7,13,10,74
-"Dragon Watcher, Junior Class",Annoyance,8,15,11,84
-Dragon-watcher Senior Class,Spelunking Equipment,9,17,13,94
-Master Dragon Watcher,Stealth,10,19,14,105
-Initiate Dragon Tamer,10-foot dragon pole,11,21,15,115
-Junior Dragon Tamer,Large Whip,12,23,17,125
-Senior Dragon Tamer,Very Large Hoop,13,25,18,135
-Master Dragon Tamer,Tame Dragon,14,27,20,145
-Dragon Rider in Training,Mechanical Bull,15,29,21,155
-Dragon Rider,Flying Dragon,16,31,22,166
-A batling,Tiny flapping wings,1,1,1,10
-A Small Bat,Slightly venomous fangs,2,3,3,21
-Medium Sized Bat,Screeching Cries,3,5,4,32
-A Large Bat,Guano,4,7,6,43
-A Giant Bat,Clinging and Biting,5,9,7,53
-A Vampire Batling,Pricking teeth,6,11,8,64
-A Small Vampire Bat,Deadly Fangs,7,13,10,74
-A Medium Sized Vampire Bat,Echoing Sounds,8,15,11,84
-A Huge Vampire Bat,Blood-Sucking,9,17,13,94
-A Vampire in Bat Form,Bad Romainan Accent,10,19,14,105
-A Vampire-Bat Prince,Death Grip,11,21,15,115
-Vampire Bat King,Red Eyes,12,23,17,125
-A Sorcerous Vampire,Petrifying Spells,13,25,18,135
-A Seductive Vampiress,Sultry Moves,14,27,20,145
-Frenzied vampire bats,Numerous attacks,15,29,21,155
-"Vampirus,the Bat God",Godly Power,16,31,22,166
-Old Man Winter,Bitter Cold,9,17,13,94
+name,weapon,level,attack,defense,maxHealth,experience,gold
+Thieving Kender,Whirling Hoopack,1,1,1,10,14,36
+Rude Student,Worn Textbook,1,1,1,10,14,36
+Baby Unicorn,Blunt Horn,1,1,1,10,14,36
+Small Purple Mouse,Lashing pink tail,1,1,1,10,14,36
+Grunting Piggy,Wiggly Snout,1,1,1,10,14,36
+Dumb Old Eyesore,Nagging complaints,2,3,3,21,24,97
+Pygmy Marmoset,Pieces of treebark,2,3,3,21,24,97
+Burly Man,Amazing Absorbency,15,29,21,155,189,531
+Screaming Banschee,Hauntingly Beautiful Voice,2,3,3,21,24,97
+Ursus Minor,Twinkling Lights,2,3,3,21,24,97
+Stone Troll,Gaping  Maw,2,3,3,21,24,97
+Slithering asp,Hypnotic eyes,2,3,3,21,24,97
+Windan The Barbarian,Feathered Spear,2,3,3,21,24,97
+Studious young sorceror,Newly memorized spells,2,3,3,21,24,97
+Four and Twenty Blackbirds,Freshly Baked Pies,3,5,4,32,34,148
+Amazon,Bow and Arrow,3,5,4,32,34,148
+Overbearing mother,9pm Curfew,3,5,4,32,34,148
+Huge Bald Programmer,Shining Forehead,3,5,4,32,34,148
+Someone's Grandfather,Stories that go nowhere,3,5,4,32,34,148
+Juvenile Delinquent,Poor Attitude,3,5,4,32,34,148
+Beautiful Woodland Sprite,Kindness and tranquility,3,5,4,32,34,148
+Society Belle,Southern Charm,3,5,4,32,34,148
+Giant Goldfish Cracker,Annoying Commercial Jingles,3,5,4,32,34,148
+An Angry Mob,Torches,4,7,6,43,45,162
+Polar Bear,Terrible claws,4,7,6,43,45,162
+Decaying Skeleton,Rusty Sword,4,7,6,43,45,162
+Willie the Wonder Hampster,Nuclear Sunflower Seeds,4,7,6,43,45,162
+Winged Demon Of Death,Red Glare,4,7,6,43,45,162
+Small Dragon,Hot air,4,7,6,43,45,162
+Monstrous Dustbunny,Sneezing fits,4,7,6,43,45,162
+Small Rabbit,Sharp Pointy Teeth,4,7,6,43,45,162
+Mature Unicorn,Powerful Horn,5,9,7,53,55,198
+Gnome Necromancer,Skeleton Familiar,5,9,7,53,55,198
+Purple Dinosaur,Helpful Nature,5,9,7,53,55,198
+Orc Emmisary,Diplomacy,5,9,7,53,55,198
+A Dark Spiritling,Dark Magic,5,9,7,53,55,198
+An Enchanted Toilet,Ninja Flushing Action,5,9,7,53,55,198
+Giant Water Elemental,Torrential Downpours,5,9,7,53,55,198
+Violins,Off-Key notes,5,9,7,53,55,198
+Whirled Peas,Green Slime,5,9,7,53,55,198
+Magic Mushroom,Swirling Colors,6,11,8,64,66,234
+Invisible Man,Something Invisible and Sharp,6,11,8,64,66,234
+Clown Of Death,Balloon Animals from Beyond,6,11,8,64,66,234
+Heart of Stone,Unromantic Thoughts,6,11,8,64,66,234
+Troll Warrior,Steel Broadsword,6,11,8,64,66,234
+Bettie the Amazing Kung-Fu Butterfly,Stupendous Kung-Fu Wings,6,11,8,64,66,234
+Golden Goose,14 Karat Gold Eggs,6,11,8,64,66,234
+Black Tiger,Claws,6,11,8,64,66,234
+Lambert the Sheepish Lion,Timid Growling,6,11,8,64,66,234
+Marsha of the Jungle,Trained Monkeys,7,13,10,74,77,268
+Moe,Two Knives,7,13,10,74,77,268
+Coffin,Terrifying Premonitions,7,13,10,74,77,268
+Green Alligator,Crushing Jaws,7,13,10,74,77,268
+"Lindsey, Daughter of Erin the Ninja Squirrel",A peanut-shooter,7,13,10,74,77,268
+Wizarding School Senior Student,Memory Charm,7,13,10,74,77,268
+Enchanted Laundry Basket,Stinky Socks of Terror,7,13,10,74,77,268
+Carrot Top,Phone Company Slogans,7,13,10,74,77,268
+Macintosh Computer,Amazingly Bright Colors,7,13,10,74,77,268
+Interior Designer,Color-coordinating Sword and Shield,8,15,11,84,89,302
+Daughter of the Devil,Sinfully Good Looks,8,15,11,84,89,302
+Wild Horses,Dragging,8,15,11,84,89,302
+Steam Elemental,Scalding jets of air,8,15,11,84,89,302
+Gordon the Cheese Eater,Odiferous Nature,8,15,11,84,89,302
+Narcoleptic,Drowsiness,8,15,11,84,89,302
+Swarm of Bees,Stinging,8,15,11,84,89,302
+Halfling Mage,Painful Spells,8,15,11,84,89,302
+Citizen of Eythgim Village,Slurs,9,17,13,94,101,336
+Old Hag,Red red rose,9,17,13,94,101,336
+Charging Buffalo,Stampeding Hoofs,9,17,13,94,101,336
+Pawn,Simple tactics,9,17,13,94,101,336
+Romulan,Wrong-Genre Confusion,9,17,13,94,101,336
+Large Griffon,Beak and Claws,9,17,13,94,101,336
+Cliche Bond Movie Villian,Cell-phone of Death,9,17,13,94,101,336
+Fuzzy Ferret,Disarming Cuteness,9,17,13,94,101,336
+Starving Artist,Pointy Paintbrushes,9,17,13,94,101,336
+Guard from Eythgim Village,Rapier,10,19,14,105,114,369
+Garden Gnome,Painful Tackiness,10,19,14,105,114,369
+Chicken,Squawking,10,19,14,105,114,369
+Marksman,Deadly Aim,10,19,14,105,114,369
+Enchanted Tissue Box,Cold Germs,10,19,14,105,114,369
+Ghostly Woodsman,Phantom Axe,10,19,14,105,114,369
+Zombie,Rotting Flesh,10,19,14,105,114,369
+Fortula the Plains Cat,Claws and Teeth,10,19,14,105,114,369
+Erin the Ninja Squirrel,Acorn tossing madness,10,19,14,105,114,369
+Bluebird of Happiness,Uplifting Melody,11,21,15,115,127,402
+Potato Newscaster,Personal Opinions,11,21,15,115,127,402
+Pygmy Dragon,Fire Breath,11,21,15,115,127,402
+Zealous Photographer,Flashing Lights,11,21,15,115,127,402
+Gary Larson,Strange Cartoons,11,21,15,115,127,402
+Soldier from Eythgim Village,Battle Cry,11,21,15,115,127,402
+80's Glam Rocker,Blinding Makeup,11,21,15,115,127,402
+Vigilante,Sack of Doorknobs,11,21,15,115,127,402
+The Devil,Eternal Damnation,11,21,15,115,127,402
+Mercenary,Blood-chilling stare,12,23,17,125,141,435
+Magic Mirror,Flattering Remarks,12,23,17,125,141,435
+Broadway Extra,Memorable Showtunes,12,23,17,125,141,435
+Butter the Sprite,Magic Pixie Dust,12,23,17,125,141,435
+Father Time,Old Age,12,23,17,125,141,435
+Eythgim Village Archers,Flaming Arrows,12,23,17,125,141,435
+Animate Stormcloud,Lightning,12,23,17,125,141,435
+Three Toed Sloth,Slow responses,12,23,17,125,141,435
+Death,Cold Grasp,12,23,17,125,141,435
+Cerberus,Three drooling maws,13,25,18,135,156,467
+"Man from the deep deep, dark dark, deep dark wood",Snarling and biting,13,25,18,135,156,467
+Devil in a blue dress,Alluring Promises,13,25,18,135,156,467
+A Giant,Smashing Club,13,25,18,135,156,467
+Commander of the Eythgim Army,Winning Tactics,13,25,18,135,156,467
+Ice Dragon,Frost Breath,13,25,18,135,156,467
+Pushmi Pullyew,Conflictory Arguments,13,25,18,135,156,467
+Whale,Tail,13,25,18,135,156,467
+Gorma The Leper,Contagious Disease,13,25,18,135,156,467
+Samurai Master,Daisho,14,27,20,145,172,499
+Bartender,Duck,14,27,20,145,172,499
+Prince of Eythgim Village,Bribes of gold,14,27,20,145,172,499
+Loch Ness Monster,Shocking appearance,14,27,20,145,172,499
+Fuzzie Wuzzie,Male Pattern Baldness,14,27,20,145,172,499
+Princess of Eythgim Village,Beguiling Words,15,29,21,155,189,531
+Ugly Harpy,Poisonus Breath,14,27,20,145,172,499
+Field Mouse,Chewing,14,27,20,145,172,499
+Monarch of Eythgim Village,Royal Commands,16,31,22,166,207,563
+Cyclops Warrior,Fire Eye,15,29,21,155,189,531
+Cupid,Pink Arrows of Love,15,29,21,155,189,531
+Tabloid Writer,Far-fetched stories,15,29,21,155,189,531
+Evil Wizard,Tormented Souls,15,29,21,155,189,531
+"Artemis, Goddess of the Hunt",Winged Stags,15,29,21,155,189,531
+Centaur Archer,Deadly marksmanship,15,29,21,155,189,531
+Mime,Something imaginary,15,29,21,155,189,531
+Chili Chef,Insanity Peppers,15,29,21,155,189,531
+Brownie,Minuscule weapons,16,31,22,166,207,563
+Darkness,Self-induced terror,16,31,22,166,207,563
+Mountain King,God-like fury,16,31,22,166,207,563
+Loneliness,Silence,17,0,0,1,0,36
+Loneliness,Silence,18,0,25,1,0,0
+Feline un chapeau,Rhyming Nonsense,15,29,21,155,189,531
+Whopper With Cheese,Abundant Cholesterol,8,15,11,84,89,302
+Swarming Ladybugs,Stinking Residue,3,5,4,32,34,148
+Football Fan,Raucous Cheers,6,11,8,64,66,234
+King Agrippa,Flaming Wingnuts,13,25,18,135,156,467
+Cherubically Charming Child,Curious Questions,1,1,1,10,14,36
+Haberdasher,Heavy Hat,5,9,7,53,55,198
+Rush Hour Driver,Road Rage,11,21,15,115,127,402
+Sorority Girl in Nightie,Pillow Fighting Action,7,13,10,74,77,268
+Ulysees Wölfgang,Ridiculous Lies,14,27,20,145,172,499
+Crazy Audrey,Ravenous Kittens,9,17,13,94,101,336
+Shining Happy People,Hand Holding Terror,5,9,7,53,55,198
+Elsabutt,Gravitational Pull,8,15,11,84,89,302
+Mr. Bear,Overwhelming Sleepiness,2,3,3,21,24,97
+Everquest Junkie,1337 Sp34k,12,23,17,125,141,435
+Little Cocobean,Her Special Roast,4,7,6,43,45,162
+Humongous Hairball,Incredible Drain-Clogging Power,5,9,7,53,55,198
+Iron Chef,Sizzling Eel Flambe!,4,7,6,43,45,162
+The Government,Taxes,7,13,10,74,77,268
+Bar Fly,Alcoholism,1,1,1,10,14,36
+Methane Man,Unfriendly Gasses,7,13,10,74,77,268
+Wooly Mammoth,Wildebeest Sidekick,8,15,11,84,89,302
+Nasty Nevin,Bossy Mom,10,19,14,105,114,369
+the Gar Man,Jar of Cotton Balls,3,5,4,32,34,148
+Hiker,Walking Stick,1,1,1,10,14,36
+Camper,Marshmallow-roasting Stick,2,3,3,21,24,97
+Forest Ranger,Hunting Rifle,3,5,4,32,34,148
+Tree-Hugger,Propaganda Leaflets,4,7,6,43,45,162
+Forest Dwelling Hermit,Hand-Made Sling,5,9,7,53,55,198
+Member of Dragon Lovers Anonymous,Stuffed Dragon Toy,6,11,8,64,66,234
+Initiate Dragon Watcher,Binoculars,7,13,10,74,77,268
+"Dragon Watcher, Junior Class",Annoyance,8,15,11,84,89,302
+Dragon-watcher Senior Class,Spelunking Equipment,9,17,13,94,101,336
+Master Dragon Watcher,Stealth,10,19,14,105,114,369
+Initiate Dragon Tamer,10-foot dragon pole,11,21,15,115,127,402
+Junior Dragon Tamer,Large Whip,12,23,17,125,141,435
+Senior Dragon Tamer,Very Large Hoop,13,25,18,135,156,467
+Master Dragon Tamer,Tame Dragon,14,27,20,145,172,499
+Dragon Rider in Training,Mechanical Bull,15,29,21,155,189,531
+Dragon Rider,Flying Dragon,16,31,22,166,207,563
+A batling,Tiny flapping wings,1,1,1,10,14,36
+A Small Bat,Slightly venomous fangs,2,3,3,21,24,97
+Medium Sized Bat,Screeching Cries,3,5,4,32,34,148
+A Large Bat,Guano,4,7,6,43,45,162
+A Giant Bat,Clinging and Biting,5,9,7,53,55,198
+A Vampire Batling,Pricking teeth,6,11,8,64,66,234
+A Small Vampire Bat,Deadly Fangs,7,13,10,74,77,268
+A Medium Sized Vampire Bat,Echoing Sounds,8,15,11,84,89,302
+A Huge Vampire Bat,Blood-Sucking,9,17,13,94,101,336
+A Vampire in Bat Form,Bad Romainan Accent,10,19,14,105,114,369
+A Vampire-Bat Prince,Death Grip,11,21,15,115,127,402
+Vampire Bat King,Red Eyes,12,23,17,125,141,435
+A Sorcerous Vampire,Petrifying Spells,13,25,18,135,156,467
+A Seductive Vampiress,Sultry Moves,14,27,20,145,172,499
+Frenzied vampire bats,Numerous attacks,15,29,21,155,189,531
+"Vampirus,the Bat God",Godly Power,16,31,22,166,207,563
+Old Man Winter,Bitter Cold,9,17,13,94,101,336

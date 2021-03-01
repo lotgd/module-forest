@@ -38,7 +38,7 @@ class CreatureModelTest extends ModuleTestCase
     ) {
         $character = Character::createAtFullHealth(["name" => "Char", "level" => $level, "maxHealth" => 10]);
 
-        [$experienceRewarded, $bonusExperience] = $creature->getExperience($character);
+        [$experienceRewarded, $bonusExperience] = $creature->getScaledExperience($character);
         $this->assertSame($expectedExperience, $experienceRewarded);
         $this->assertSame(0, $bonusExperience);
     }
@@ -54,7 +54,7 @@ class CreatureModelTest extends ModuleTestCase
         $character = Character::createAtFullHealth(["name" => "Char", "level" => $level, "maxHealth" => 10]);
 
         // The bonusFactor should not influence the experience gained, since the levels are equal
-        [$experienceRewarded, $bonusExperience] = $creature->getExperience($character, bonusFactor: 1);
+        [$experienceRewarded, $bonusExperience] = $creature->getScaledExperience($character, bonusFactor: 1);
         $this->assertSame($expectedExperience, $experienceRewarded);
         $this->assertSame(0, $bonusExperience);
     }
@@ -70,7 +70,7 @@ class CreatureModelTest extends ModuleTestCase
         $character = Character::createAtFullHealth(["name" => "Char", "level" => $level, "maxHealth" => 10]);
 
         // The malusFactor should not influence the experience gained, since the levels are equal
-        [$experienceRewarded, $bonusExperience] = $creature->getExperience($character, malusFactor: 1);
+        [$experienceRewarded, $bonusExperience] = $creature->getScaledExperience($character, malusFactor: 1);
         $this->assertSame($expectedExperience, $experienceRewarded);
         $this->assertSame(0, $bonusExperience);
     }
@@ -86,7 +86,7 @@ class CreatureModelTest extends ModuleTestCase
         $character = Character::createAtFullHealth(["name" => "Char", "level" => $level+1, "maxHealth" => 10]);
 
         // bonus and malus are 0, nothing should happen
-        [$experienceRewarded, $bonusExperience] = $creature->getExperience($character);
+        [$experienceRewarded, $bonusExperience] = $creature->getScaledExperience($character);
         $this->assertSame($expectedExperience, $experienceRewarded);
         $this->assertSame(0, $bonusExperience);
     }
@@ -102,7 +102,7 @@ class CreatureModelTest extends ModuleTestCase
         $character = Character::createAtFullHealth(["name" => "Char", "level" => $level+1, "maxHealth" => 10]);
 
         // bonus should not influence the result as the creature is weaker
-        [$experienceRewarded, $bonusExperience] = $creature->getExperience($character, bonusFactor: 1);
+        [$experienceRewarded, $bonusExperience] = $creature->getScaledExperience($character, bonusFactor: 1);
         $this->assertSame($expectedExperience, $experienceRewarded);
         $this->assertSame(0, $bonusExperience);
     }
@@ -118,7 +118,7 @@ class CreatureModelTest extends ModuleTestCase
         $character = Character::createAtFullHealth(["name" => "Char", "level" => $level+1, "maxHealth" => 10]);
 
         // malus factor of 1 should set the experience to half
-        [$experienceRewarded, $bonusExperience] = $creature->getExperience($character, malusFactor: 0.5);
+        [$experienceRewarded, $bonusExperience] = $creature->getScaledExperience($character, malusFactor: 0.5);
 
         $bonusExperienceExpected = -(int)round($expectedExperience * 0.5, 0);
         $expectedExperience = (int)round($expectedExperience * 0.5, 0, PHP_ROUND_HALF_DOWN);
@@ -138,7 +138,7 @@ class CreatureModelTest extends ModuleTestCase
         $character = Character::createAtFullHealth(["name" => "Char", "level" => $level-1, "maxHealth" => 10]);
 
         // bonus and malus are 0, nothing should happen
-        [$experienceRewarded, $bonusExperience] = $creature->getExperience($character);
+        [$experienceRewarded, $bonusExperience] = $creature->getScaledExperience($character);
         $this->assertSame($expectedExperience, $experienceRewarded);
         $this->assertSame(0, $bonusExperience);
     }
@@ -154,7 +154,7 @@ class CreatureModelTest extends ModuleTestCase
         $character = Character::createAtFullHealth(["name" => "Char", "level" => $level-1, "maxHealth" => 10]);
 
         // bonus should should change the result, as the creature is stronger.
-        [$experienceRewarded, $bonusExperience] = $creature->getExperience($character, bonusFactor: 1);
+        [$experienceRewarded, $bonusExperience] = $creature->getScaledExperience($character, bonusFactor: 1);
 
         $this->assertSame(2*$expectedExperience, $experienceRewarded);
         $this->assertSame($expectedExperience, $bonusExperience);
@@ -171,7 +171,7 @@ class CreatureModelTest extends ModuleTestCase
         $character = Character::createAtFullHealth(["name" => "Char", "level" => $level-1, "maxHealth" => 10]);
 
         // A malus should do nothing, as the creature is stronger
-        [$experienceRewarded, $bonusExperience] = $creature->getExperience($character, malusFactor: 0.5);
+        [$experienceRewarded, $bonusExperience] = $creature->getScaledExperience($character, malusFactor: 0.5);
         $this->assertSame($expectedExperience, $experienceRewarded);
         $this->assertSame(0, $bonusExperience);
     }

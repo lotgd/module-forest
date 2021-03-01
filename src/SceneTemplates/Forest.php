@@ -3,30 +3,28 @@ declare(strict_types=1);
 
 namespace LotGD\Module\Forest\SceneTemplates;
 
-use Composer\Script\Event;
 use LotGD\Core\Action;
 use LotGD\Core\ActionGroup;
 use LotGD\Core\Battle;
 use LotGD\Core\Events\EventContext;
-use LotGD\Core\Events\NavigateToSceneData;
 use LotGD\Core\Events\ViewpointDecorationEventData;
 use LotGD\Core\Game;
 use LotGD\Core\Models\Character;
-use LotGD\Core\Models\FighterInterface;
 use LotGD\Core\Models\Scene;
 use LotGD\Core\Models\SceneConnectable;
 use LotGD\Core\Models\SceneConnection;
 use LotGD\Core\Models\SceneConnectionGroup;
+use LotGD\Core\Models\SceneProperty;
 use LotGD\Core\Models\SceneTemplate;
 use LotGD\Core\Models\Viewpoint;
 use LotGD\Core\SceneTemplates\SceneTemplateInterface;
 use LotGD\Module\Res\Fight\Fight;
-use LotGD\Module\Res\Fight\Models\CharacterResFightExtension;
-use LotGD\Module\Res\Fight\Module as ResFightModule;
 
 use LotGD\Module\Forest\Managers\CreatureManager;
 use LotGD\Module\Forest\Models\Creature;
 use LotGD\Module\Forest\Module;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Class Forest, contains helper methods for forest events
@@ -40,6 +38,10 @@ class Forest implements SceneTemplateInterface
         "fight" => ["lotgd/module-forest/forest/fight", "Fight"],
         "back" => ["lotgd/module-forest/forest/back", "Back"],
     ];
+
+    // Scene properties
+    const GemDropProbabilitySceneProperty = Module::Module . "/gemDropProbability";
+    const LostExperienceUponDeathSceneProperty = Module::Module . "/lostExperienceUponDeath";
 
     private static ?SceneTemplate $template = null;
 
@@ -220,16 +222,19 @@ class Forest implements SceneTemplateInterface
         if ($battleIdentifier == Module::BattleContext) {
             /** @var Battle $battle */
             $battle = $context->getDataField("battle");
+            /** @var Viewpoint $viewpoint */
             $viewpoint = $context->getDataField("viewpoint");
             $referrerSceneId = $context->getDataField("referrerSceneId");
-            $character = $g->getCharacter();;
+            /** @var Scene $scene */
+            $scene = $g->getEntityManager()->getRepository(Scene::class)->find($referrerSceneId);
+            $character = $g->getCharacter();
 
             if ($battle->getWinner() === $character) {
                 $monster = $battle->getMonster();
 
                 // Calculate how much experience the user earns.
                 if ($monster instanceof Creature) {
-                    [$experienceGained, $bonusExperience] = $monster->getExperience(
+                    [$experienceGained, $bonusExperience] = $monster->getScaledExperience(
                         $character,
                         bonusFactor: $module->getProperty(
                             name: Module::ExperienceBonusFactorProperty,
@@ -251,6 +256,23 @@ class Forest implements SceneTemplateInterface
                 // Decorate viewpoint
                 $viewpoint->setTitle("You won!");
 
+                // Gold
+                $gold = $g->getDiceBag()->pseudoBell(0, $monster->getGold());
+                $gold = $character->addGold($gold);
+
+                if ($gold > 0) {
+                    $viewpoint->addDescriptionParagraph(sprintf("You receive %s pieces of gold.", $gold));
+                }
+
+                // Gem loot
+                $gemChance = $scene->getProperty(Forest::GemDropProbabilitySceneProperty);
+                $gemChance ??= $module->getProperty(Module::GemDropProbabilityProperty, Module::GemDropProbabilityPropertyDefault);
+                if ($g->getDiceBag()->chance($gemChance)) {
+                    $viewpoint->addDescriptionParagraph("You find one gem on the creature's corpse.");
+                    $character->addGems(1);
+                }
+
+                // Experience
                 if ($bonusExperience < 0) {
                     $viewpoint->addDescriptionParagraph(sprintf(
                         "As this battle was not challenging for you, you lose %s experience from your reward.",
@@ -269,8 +291,11 @@ class Forest implements SceneTemplateInterface
                     $experienceGained
                 ));
             } else {
-                // Remove 10% of the characters experience.
-                $character->multiplyExperience(0.9);
+                // Remove a configurable amount of experience from the character.
+                $experienceLooseFactor = $scene->getProperty(Forest::LostExperienceUponDeathSceneProperty);
+                $experienceLooseFactor ??= $module->getProperty(Module::LostExperienceUponDeathProperty, Module::LostExperienceUponDeathPropertyDefault);
+
+                $character->multiplyExperience(1 - $experienceLooseFactor);
 
                 // Decorate viewpoint
                 $viewpoint->setTitle("You died!");
@@ -281,8 +306,6 @@ class Forest implements SceneTemplateInterface
             }
 
             // Display normal actions (need API later for this, from core)
-            $scene = $g->getEntityManager()->getRepository(Scene::class)->find($referrerSceneId);
-
             $actionGroups = [
                 ActionGroup::DefaultGroup => new ActionGroup(ActionGroup::DefaultGroup, '', 0),
             ];
@@ -325,6 +348,134 @@ class Forest implements SceneTemplateInterface
             // Display "search" actions
             $context = self::handleMainForest($g, $context, $referrerSceneId);
         }
+
+        return $context;
+    }
+
+
+    public static function handleSceneConfig(Game $g, EventContext $context): EventContext
+    {
+        // Get this module
+        $scene = $context->getDataField("scene");
+
+        return match ($context->getEvent()) {
+            "h/lotgd/core/cli/scene-config-list/" . Forest::getNavigationEvent() => self::handleSceneConfigList($g, $context, $scene),
+
+            "h/lotgd/core/cli/scene-config-set/" . Forest::getNavigationEvent() => match($context->getDataField("setting")) {
+                self::LostExperienceUponDeathSceneProperty => self::handleExperienceLostExperienceAfterDeathScenePropertySetEvent($g, $context, $scene),
+                self::GemDropProbabilitySceneProperty => self::handleExperienceGemDropProbabilityScenePropertySetEvent($g, $context, $scene),
+                default => $context,
+            },
+
+            "h/lotgd/core/cli/scene-config-reset/" . Forest::getNavigationEvent() => match($context->getDataField("setting")) {
+                self::LostExperienceUponDeathSceneProperty => self::handleExperienceLostExperienceAfterDeathScenePropertyResetEvent($g, $context, $scene),
+                self::GemDropProbabilitySceneProperty => self::handleExperienceGemDropProbabilityScenePropertyResetEvent($g, $context, $scene),
+                default => $context,
+            },
+        };
+    }
+
+    protected static function handleSceneConfigList(Game $g, EventContext $context, Scene $module): EventContext
+    {
+        // Get existing settings
+        $settings = $context->getDataField("settings");
+
+        array_push(
+            $settings, [
+            self::GemDropProbabilitySceneProperty,
+            $module->getProperty(self::GemDropProbabilitySceneProperty, null),
+            "Scene probability that a gem drops after a battle (0 ≤ x ≤ 1)",
+        ], [
+                self::LostExperienceUponDeathSceneProperty,
+                $module->getProperty(self::LostExperienceUponDeathSceneProperty, null),
+                "Amount of experience that gets lost after dying in this scene (0 ≤ x ≤ 1)",
+            ]
+        );
+
+        // Set settings
+        $context->setDataField("settings", $settings);
+
+        // Return
+        return $context;
+    }
+
+    protected static function handleExperienceLostExperienceAfterDeathScenePropertySetEvent(Game $g, EventContext $context, Scene $scene): EventContext
+    {
+        /** @var SymfonyStyle $io */
+        $io = $context->getDataField("io");
+
+        try {
+            $value = floatval($context->getDataField("value"));
+
+            if ($value < 0) {
+                $io->error("Lost experience fraction must be at least 0.");
+            } elseif ($value > 1) {
+                $io->error("Character cannot loose more experience than he has.");
+            } else {
+                $scene->setProperty(self::LostExperienceUponDeathSceneProperty, $value);
+                $io->success("Lost experience factor was set to {$value}.");
+                $g->getLogger()->info("Lost experience factor was set to {$value}.");
+            }
+
+            $context->setDataField("return", Command::SUCCESS);
+        } catch (Exception $e) {
+            $context->setDataField("reason", $e->getMessage());
+        }
+
+        return $context;
+    }
+
+    protected static function handleExperienceLostExperienceAfterDeathScenePropertyResetEvent(Game $g, EventContext $context, Scene $scene): EventContext
+    {
+        /** @var SymfonyStyle $io */
+        $io = $context->getDataField("io");
+
+        $scene->setProperty(self::LostExperienceUponDeathSceneProperty, null);
+        $context->setDataField("return", Command::SUCCESS);
+
+        $io->success("Lost experience factor was reset.");
+        $g->getLogger()->info("Lost experience factor was reset.");
+
+        return $context;
+    }
+
+    protected static function handleExperienceGemDropProbabilityScenePropertySetEvent(Game $g, EventContext $context, Scene $scene): EventContext
+    {
+        /** @var SymfonyStyle $io */
+        $io = $context->getDataField("io");
+
+        try {
+            $value = floatval($context->getDataField("value"));
+
+            if ($value < 0) {
+                $io->error("Gem drop probability cannot be smaller than 0.");
+            } elseif ($value > 1) {
+                $io->error("Gem drop probability cannot be higher than 1.");
+            } else {
+                $scene->setProperty(self::GemDropProbabilitySceneProperty, $value);
+
+                $io->success("Gem drop probability was set to {$value}.");
+                $g->getLogger()->info("Gem drop probability was set to {$value}.");
+            }
+
+            $context->setDataField("return", Command::SUCCESS);
+        } catch (Exception $e) {
+            $context->setDataField("reason", $e->getMessage());
+        }
+
+        return $context;
+    }
+
+    protected static function handleExperienceGemDropProbabilityScenePropertyResetEvent(Game $g, EventContext $context, Scene $scene): EventContext
+    {
+        /** @var SymfonyStyle $io */
+        $io = $context->getDataField("io");
+
+        $scene->setProperty(self::GemDropProbabilitySceneProperty, null);
+        $context->setDataField("return", Command::SUCCESS);
+
+        $io->success("Gem drop probability was reset.");
+        $g->getLogger()->info("Gem rop probability was reset.");
 
         return $context;
     }

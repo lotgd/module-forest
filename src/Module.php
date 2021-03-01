@@ -3,18 +3,19 @@ declare(strict_types=1);
 
 namespace LotGD\Module\Forest;
 
+use Doctrine\DBAL\ConnectionException;
 use Exception;
-use SplFileObject;
-use LotGD\Core\Game;
 use LotGD\Core\Events\EventContext;
-use LotGD\Core\Module as ModuleInterface;
+use LotGD\Core\Game;
 use LotGD\Core\Models\Module as ModuleModel;
 use LotGD\Core\Models\Scene;
-use LotGD\Module\Village\SceneTemplates\VillageScene;
-use LotGD\Module\Res\Fight\Module as FightModule;
+use LotGD\Core\Module as ModuleInterface;
 use LotGD\Module\Forest\Models\Creature;
 use LotGD\Module\Forest\SceneTemplates\Forest;
 use LotGD\Module\Forest\SceneTemplates\Healer;
+use LotGD\Module\Res\Fight\Module as FightModule;
+use LotGD\Module\Village\SceneTemplates\VillageScene;
+use SplFileObject;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -32,6 +33,11 @@ class Module implements ModuleInterface {
     const ExperienceBonusFactorPropertyDefault = 0.25;
     const ExperienceMalusFactorProperty = "experienceMalus";
     const ExperienceMalusFactorPropertyDefault = 0.25;
+    const GemDropProbabilityProperty = "gemDropProbability";
+    const GemDropProbabilityPropertyDefault = 0.04;
+    const LostExperienceUponDeathProperty = "lostExperienceUponDeath";
+    const LostExperienceUponDeathPropertyDefault = 0.1;
+
 
     public static function handleEvent(Game $g, EventContext $context): EventContext
     {
@@ -40,8 +46,11 @@ class Module implements ModuleInterface {
             "h/lotgd/core/navigate-to/" . Healer::Template => Healer::handleEvent($g, $context),
             FightModule::HookBattleOver => Forest::handleBattleOverEvent($g, $context),
             "h/lotgd/core/cli/module-config-list/" . self::Module,
-            "h/lotgd/core/cli/module-config-set/" . self::Module,
-            "h/lotgd/core/cli/module-config-reset/" . self::Module => self::handleModuleConfig($g, $context),
+                "h/lotgd/core/cli/module-config-set/" . self::Module,
+                "h/lotgd/core/cli/module-config-reset/" . self::Module => self::handleModuleConfig($g, $context),
+            "h/lotgd/core/cli/scene-config-list/" . Forest::getNavigationEvent(),
+                "h/lotgd/core/cli/scene-config-set/" . Forest::getNavigationEvent(),
+                "h/lotgd/core/cli/scene-config-reset/" . Forest::getNavigationEvent() => Forest::handleSceneConfig($g, $context),
             default => $context,
         };
     }
@@ -58,18 +67,23 @@ class Module implements ModuleInterface {
 
         return match ($context->getEvent()) {
             "h/lotgd/core/cli/module-config-list/" . self::Module => self::handleModuleConfigList($g, $context, $module),
-            "h/lotgd/core/cli/module-config-set/" . self::Module => self::handleModuleConfigSetEvent($g, $context, $module),
-            "h/lotgd/core/cli/module-config-reset/" . self::Module => self::handleModuleConfigResetEvent($g, $context, $module),
+            "h/lotgd/core/cli/module-config-set/" . self::Module => match($context->getDataField("setting")) {
+                self::ExperienceBonusFactorProperty => self::handleExperienceBonusFactorModulePropertySetEvent($g, $context, $module),
+                self::ExperienceMalusFactorProperty => self::handleExperienceMalusFactorModulePropertySetEvent($g, $context, $module),
+                self::LostExperienceUponDeathProperty => self::handleExperienceLostExperienceAfterDeathModulePropertySetEvent($g, $context, $module),
+                self::GemDropProbabilityProperty => self::handleExperienceGemDropProbabilityModulePropertySetEvent($g, $context, $module),
+                default => $context,
+            },
+            "h/lotgd/core/cli/module-config-reset/" . self::Module => match($context->getDataField("setting")) {
+                self::ExperienceBonusFactorProperty => self::handleExperienceBonusFactorModulePropertyResetEvent($g, $context, $module),
+                self::ExperienceMalusFactorProperty => self::handleExperienceMalusFactorPropertyModuleResetEvent($g, $context, $module),
+                self::LostExperienceUponDeathProperty => self::handleExperienceLostExperienceAfterDeathModulePropertyResetEvent($g, $context, $module),
+                self::GemDropProbabilityProperty => self::handleExperienceGemDropProbabilityModulePropertyResetEvent($g, $context, $module),
+                default => $context,
+            },
         };
     }
 
-    /**
-     * Internal event handler for handling module-config-list
-     * @param Game $g
-     * @param EventContext $context
-     * @param ModuleModel $module
-     * @return EventContext
-     */
     protected static function handleModuleConfigList(Game $g, EventContext $context, ModuleModel $module): EventContext
     {
         // Get existing settings
@@ -79,11 +93,19 @@ class Module implements ModuleInterface {
             $settings, [
                 self::ExperienceBonusFactorProperty,
                 $module->getProperty(self::ExperienceBonusFactorProperty, self::ExperienceBonusFactorPropertyDefault),
-                "Additional experience gained for harsher battles (as fraction, should be > 0)"
+                "Additional experience gained for harsher battles (as fraction, should be > 0)",
             ], [
                 self::ExperienceMalusFactorProperty,
                 $module->getProperty(self::ExperienceMalusFactorProperty, self::ExperienceMalusFactorPropertyDefault),
-                "Experience reduction for easier battles (fraction, should be > 0)"
+                "Experience reduction for easier battles (fraction, should be > 0, must be ≤ 1)",
+            ], [
+                self::GemDropProbabilityProperty,
+                $module->getProperty(self::GemDropProbabilityProperty, self::GemDropProbabilityPropertyDefault),
+                "Global probability that a gem drops after a battle (0 ≤ x ≤ 1)",
+            ], [
+                self::LostExperienceUponDeathProperty,
+                $module->getProperty(self::LostExperienceUponDeathProperty, self::LostExperienceUponDeathPropertyDefault),
+                "Amount of experience that gets lost after dying (0 ≤ x ≤ 1)",
             ]
         );
 
@@ -94,83 +116,164 @@ class Module implements ModuleInterface {
         return $context;
     }
 
-    /**
-     * Internal event handler for handling module-config-set.
-     * @param Game $g
-     * @param EventContext $context
-     * @param ModuleModel $module
-     * @return EventContext
-     */
-    protected static function handleModuleConfigSetEvent(Game $g, EventContext $context, ModuleModel $module): EventContext
+    protected static function handleExperienceBonusFactorModulePropertySetEvent(Game $g, EventContext $context, ModuleModel $module): EventContext
     {
-        $setting = $context->getDataField("setting");
         /** @var SymfonyStyle $io */
         $io = $context->getDataField("io");
 
-        if ($setting === self::ExperienceBonusFactorProperty) {
-            try {
-                $value = floatval($context->getDataField("value"));
+        try {
+            $value = floatval($context->getDataField("value"));
 
-                if ($value < 0) {
-                    $io->warning("A negative bonus factor will lead to less experience earned.");
-                }
-
-                $module->setProperty(self::ExperienceBonusFactorProperty, $value);
-                $context->setDataField("return", Command::SUCCESS);
-                $io->success("Bonus experience factor was set to {$value}.");
-                $g->getLogger()->info("Bonus experience factor was set to {$value}.");
-            } catch (Exception $e) {
-                $context->setDataField("reason", $e->getMessage());
+            if ($value < 0) {
+                $io->warning("A negative bonus factor will lead to less experience earned.");
             }
-        } elseif ($setting === self::ExperienceMalusFactorProperty) {
-            try {
-                $value = floatval($context->getDataField("value"));
 
-                if ($value < 0) {
-                    $io->warning("A negative malus factor will lead to more experience earned.");
-                }
+            $module->setProperty(self::ExperienceBonusFactorProperty, $value);
+            $context->setDataField("return", Command::SUCCESS);
 
-                if ($value >= 1) {
-                    $io->error("Experience malus cannot be bigger than 1. This would lead to the character loosing experience in total.");
-                    $context->setDataField("return", Command::SUCCESS);
-                } else {
-                    $module->setProperty(self::ExperienceMalusFactorProperty, $value);
-                    $context->setDataField("return", Command::SUCCESS);
-                    $io->success("Malus experience factor was set to {$value}.");
-                    $g->getLogger()->info("Malus experience factor was set to {$value}.");
-                }
-            } catch (Exception $e) {
-                $context->setDataField("reason", $e->getMessage());
-            }
+            $io->success("Bonus experience factor was set to {$value}.");
+            $g->getLogger()->info("Bonus experience factor was set to {$value}.");
+        } catch (Exception $e) {
+            $context->setDataField("reason", $e->getMessage());
         }
 
         return $context;
     }
 
-    /**
-     * Internal event handler for handling module-config-reset.
-     * @param Game $g
-     * @param EventContext $context
-     * @param ModuleModel $module
-     * @return EventContext
-     */
-    protected static function handleModuleConfigResetEvent(Game $g, EventContext $context, ModuleModel $module): EventContext
+    protected static function handleExperienceBonusFactorModulePropertyResetEvent(Game $g, EventContext $context, ModuleModel $module): EventContext
     {
-        $setting = $context->getDataField("setting");
         /** @var SymfonyStyle $io */
         $io = $context->getDataField("io");
 
-        if ($setting === self::ExperienceBonusFactorProperty) {
-            $module->setProperty(self::ExperienceBonusFactorProperty, self::ExperienceBonusFactorPropertyDefault);
-            $context->setDataField("return", Command::SUCCESS);
-            $io->success("Experience bonus factor reset to 0.25.");
-            $g->getLogger()->info("Experience bonus factor reset to 0.");
-        } elseif ($setting === self::ExperienceMalusFactorProperty) {
-            $module->setProperty(self::ExperienceMalusFactorProperty, self::ExperienceMalusFactorPropertyDefault);
-            $context->setDataField("return", Command::SUCCESS);
-            $io->success("Experience bonus factor reset to 0.25.");
-            $g->getLogger()->info("Experience bonus factor reset to 0.");
+        $module->setProperty(self::ExperienceBonusFactorProperty, self::ExperienceBonusFactorPropertyDefault);
+        $context->setDataField("return", Command::SUCCESS);
+
+        $io->success("Experience bonus factor was reset to ".(string)self::ExperienceBonusFactorPropertyDefault.".");
+        $g->getLogger()->info("Experience bonus factor was reset to ".(string)self::ExperienceBonusFactorPropertyDefault.".");
+
+        return $context;
+    }
+
+    protected static function handleExperienceMalusFactorModulePropertySetEvent(Game $g, EventContext $context, ModuleModel $module): EventContext
+    {
+        /** @var SymfonyStyle $io */
+        $io = $context->getDataField("io");
+
+        try {
+            $value = floatval($context->getDataField("value"));
+
+            if ($value < 0) {
+                $io->warning("A negative malus factor will lead to more experience earned.");
+            }
+
+            if ($value >= 1) {
+                $io->error("Experience malus cannot be bigger than 1. This would lead to the character loosing experience in total.");
+                $context->setDataField("return", Command::SUCCESS);
+            } else {
+                $module->setProperty(self::ExperienceMalusFactorProperty, $value);
+                $context->setDataField("return", Command::SUCCESS);
+
+                $io->success("Malus experience factor was set to {$value}.");
+                $g->getLogger()->info("Malus experience factor was set to {$value}.");
+            }
+        } catch (Exception $e) {
+            $context->setDataField("reason", $e->getMessage());
         }
+
+        return $context;
+    }
+
+    protected static function handleExperienceMalusFactorPropertyModuleResetEvent(Game $g, EventContext $context, ModuleModel $module): EventContext
+    {
+        /** @var SymfonyStyle $io */
+        $io = $context->getDataField("io");
+
+        $module->setProperty(self::ExperienceMalusFactorProperty, self::ExperienceMalusFactorPropertyDefault);
+        $context->setDataField("return", Command::SUCCESS);
+
+        $io->success("Experience malus factor was reset to ".(string)self::ExperienceMalusFactorPropertyDefault.".");
+        $g->getLogger()->info("Experience malus was factor reset to ".(string)self::ExperienceMalusFactorPropertyDefault.".");
+
+        return $context;
+    }
+
+    protected static function handleExperienceLostExperienceAfterDeathModulePropertySetEvent(Game $g, EventContext $context, ModuleModel $module): EventContext
+    {
+        /** @var SymfonyStyle $io */
+        $io = $context->getDataField("io");
+
+        try {
+            $value = floatval($context->getDataField("value"));
+
+            if ($value < 0) {
+                $io->error("Lost experience fraction must be at least 0.");
+            } elseif ($value > 1) {
+                $io->error("Character cannot loose more experience than he has.");
+            } else {
+                $module->setProperty(self::LostExperienceUponDeathProperty, $value);
+                $io->success("Lost experience factor was set to {$value}.");
+                $g->getLogger()->info("Lost experience factor was set to {$value}.");
+            }
+
+            $context->setDataField("return", Command::SUCCESS);
+        } catch (Exception $e) {
+            $context->setDataField("reason", $e->getMessage());
+        }
+
+        return $context;
+    }
+
+    protected static function handleExperienceLostExperienceAfterDeathModulePropertyResetEvent(Game $g, EventContext $context, ModuleModel $module): EventContext
+    {
+        /** @var SymfonyStyle $io */
+        $io = $context->getDataField("io");
+
+        $module->setProperty(self::LostExperienceUponDeathProperty, self::LostExperienceUponDeathPropertyDefault);
+        $context->setDataField("return", Command::SUCCESS);
+
+        $io->success("Lost experience factor was reset to ".(string)self::LostExperienceUponDeathPropertyDefault.".");
+        $g->getLogger()->info("Lost experience factor was reset to ".(string)self::LostExperienceUponDeathPropertyDefault.".");
+
+        return $context;
+    }
+
+    protected static function handleExperienceGemDropProbabilityModulePropertySetEvent(Game $g, EventContext $context, ModuleModel $module): EventContext
+    {
+        /** @var SymfonyStyle $io */
+        $io = $context->getDataField("io");
+
+        try {
+            $value = floatval($context->getDataField("value"));
+
+            if ($value < 0) {
+                $io->error("Gem drop probability cannot be smaller than 0.");
+            } elseif ($value > 1) {
+                $io->error("Gem drop probability cannot be higher than 1.");
+            } else {
+                $module->setProperty(self::GemDropProbabilityProperty, $value);
+
+                $io->success("Gem drop probability was set to {$value}.");
+                $g->getLogger()->info("Gem drop probability was set to {$value}.");
+            }
+
+            $context->setDataField("return", Command::SUCCESS);
+        } catch (Exception $e) {
+            $context->setDataField("reason", $e->getMessage());
+        }
+
+        return $context;
+    }
+
+    protected static function handleExperienceGemDropProbabilityModulePropertyResetEvent(Game $g, EventContext $context, ModuleModel $module): EventContext
+    {
+        /** @var SymfonyStyle $io */
+        $io = $context->getDataField("io");
+
+        $module->setProperty(self::GemDropProbabilityProperty, self::GemDropProbabilityPropertyDefault);
+        $context->setDataField("return", Command::SUCCESS);
+
+        $io->success("Gem drop probability was reset to ".(string)self::GemDropProbabilityPropertyDefault.".");
+        $g->getLogger()->info("Gem rop probability reset was to ".(string)self::GemDropProbabilityPropertyDefault.".");
 
         return $context;
     }
@@ -179,6 +282,7 @@ class Module implements ModuleInterface {
      * Installation procedure
      * @param Game $g
      * @param ModuleModel $module
+     * @throws Exception
      */
     public static function onRegister(Game $g, ModuleModel $module)
     {
@@ -227,6 +331,8 @@ class Module implements ModuleInterface {
                 attack: intval($data[3]),
                 defense: intval($data[4]),
                 maxHealth: intval($data[5]),
+                experience: intval($data[6]),
+                gold: intval($data[7]),
             );
 
             $g->getEntityManager()->persist($creature);
@@ -236,10 +342,10 @@ class Module implements ModuleInterface {
     }
 
     /**
-     * Deinstallation proceure
+     * Module removal procedure
      * @param Game $g
      * @param ModuleModel $module
-     * @throws \Doctrine\DBAL\ConnectionException
+     * @throws ConnectionException
      * @throws \Doctrine\DBAL\Exception
      */
     public static function onUnregister(Game $g, ModuleModel $module)
