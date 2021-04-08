@@ -9,6 +9,7 @@ use LotGD\Core\Game;
 use LotGD\Core\Models\Character;
 use LotGD\Core\Models\Scene;
 use LotGD\Module\Forest\SceneTemplates\Fight;
+use LotGD\Module\Forest\SceneTemplates\Healer;
 use LotGD\Module\Res\Fight\Tests\helpers\EventRegistry;
 use LotGD\Module\Res\Fight\Module as ResFightModule;
 
@@ -17,6 +18,11 @@ use LotGD\Module\Forest\Module;
 class ModuleTest extends ModuleTestCase
 {
     const Library = 'lotgd/module-forest';
+
+    public function useSilentHandler(): bool
+    {
+        return true;
+    }
 
     /**
      * @doesNotPerformAssertions
@@ -124,8 +130,15 @@ class ModuleTest extends ModuleTestCase
 
         // Assert that we are not completely healed.
         $this->assertLessThan($character->getMaxHealth(), $character->getHealth());
-        $this->assertHasAction($v, ["getTitle", "Complete Healing"], "Potions");
-        $action = $this->getAction($v, ["getTitle", "Complete Healing"], "Potions");
+
+        $actionGroup = $v->findActionGroupById(Healer::Groups["healing"][0]);
+        $this->assertCount(10, $actionGroup->getActions());
+        $action = $actionGroup->getActions()[0];
+        $this->assertTrue(str_starts_with($action->getRenderedTitle(), "Complete Healing"));
+
+        // Make sure the test character has enough gold!
+        $character->setGold(20000);
+
         $game->takeAction($action->getId());
         // Assert we are.
         $this->assertEquals($character->getMaxHealth(), $character->getHealth());
@@ -145,12 +158,23 @@ class ModuleTest extends ModuleTestCase
 
         // Take actions
         $this->takeActions($game, $v, [$forestSceneId, $healerSceneId]);
-        $this->assertHasAction($v, ["getTitle", "Complete Healing"], "Potions");
+
+        // Assert if we have the correct scene
+        $this->assertSame($healerSceneId, $v->getScene()->getId());
+        // Assert if we find healing options
+        $actionGroup = $v->findActionGroupById(Healer::Groups["healing"][0]);
+        $this->assertCount(10, $actionGroup->getActions());
+        $action = $actionGroup->getActions()[0];
+        $this->assertTrue(str_starts_with($action->getRenderedTitle(), "Complete Healing"));
 
         // Heal, go back and return
         $character->setHealth($character->getMaxHealth());
         $this->takeActions($game, $v, [$forestSceneId, $healerSceneId]);
-        $this->assertNotHasAction($v, ["getTitle", "Complete Healing"], "Potions");
+        // Assert if we have the correct scene
+        $this->assertSame($healerSceneId, $v->getScene()->getId());
+        // Assert that we have no healing options
+        $actionGroup = $v->findActionGroupById(Healer::Groups["healing"][0]);
+        $this->assertNull($actionGroup);
     }
 
     public function testIfHealerSuccessfullyRemovesHealthAboveMaximum()
@@ -182,12 +206,15 @@ class ModuleTest extends ModuleTestCase
         $game->setCharacter($character);
         $v = $game->getViewpoint();
 
+        [$forestSceneId, $healerSceneId] = $this->getTestSceneIds();
+
         // Take actions
         $this->assertSame(0, $character->getHealth());
-        $this->takeActions($game, $v, ["20000000-0000-0000-0000-000000000005"]);
+        $this->takeActions($game, $v, [$forestSceneId]);
         $this->assertNotHasAction($v, ["getTitle", "Search for a fight"], "Fight");
-        $this->takeActions($game, $v, ["20000000-0000-0000-0000-000000000006"]);
+        $this->takeActions($game, $v, [$healerSceneId]);
         $this->assertNotHasAction($v, ["getTitle", "Complete Healing"], "Potions");
+        $this->assertStringContainsString("Slain you were. Doing for the dead nothing I can. Leaving you must.", $v->getDescription());
     }
 
     public function testIfTiredCharacterCannotStartAFight()

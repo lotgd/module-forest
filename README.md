@@ -5,6 +5,26 @@ This module provides a forest scene template for characters to engane in combat
 in varying degrees of difficulties. It also provides a Healer's Hut, where characters
 can heal themselves.
 
+## Scene templates
+
+`LotGD\Module\Forest\SceneTemplates\Forest`
+- A scene with this template will allow battles. Upon installation, for each existing village scene, a 
+ new forest is added.
+
+`LotGD\Module\Forest\SceneTemplates\Healer`
+- A scene with this template will contain the possibility to heal.
+
+## Event subscriptions
+- `#h/lotgd/core/navigate-to/lotgd/module-forest/forest#`
+- `#h/lotgd/core/navigate-to/lotgd/module-forest/healer#`
+- `#h/lotgd/module-res-fight/battleOver#`
+- `#h/lotgd/core/cli/module-config-list/lotgd/module-forest#`
+- `#h/lotgd/core/cli/module-config-set/lotgd/module-forest#`
+- `#h/lotgd/core/cli/module-config-reset/lotgd/module-forest#`
+- `#h/lotgd/core/cli/scene-config-list/lotgd/module-forest/forest#`
+- `#h/lotgd/core/cli/scene-config-set/lotgd/module-forest/forest#`
+- `#h/lotgd/core/cli/scene-config-reset/lotgd/module-forest/forest#`
+
 ## API
 ### Events and hooks
 - `h/lotgd/module-forest/forest-navigation` (`Module::HookForestNavigation`)\
