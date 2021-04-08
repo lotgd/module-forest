@@ -212,7 +212,7 @@ class Healer implements SceneTemplateInterface
         /** @var Character $c */
         $c = $g->getCharacter();
 
-        $healFraction = $context->getDataField("parameters")["healing"];
+        $healFraction = $context->getDataField("parameters")["healing"]/100;
         $healAmount = round(($c->getMaxHealth() - $c->getHealth()) * $healFraction, 0);
         $healCosts = self::getHealCosts($c);
         $actualCosts = round($healCosts * $healFraction, 0);
@@ -234,7 +234,7 @@ class Healer implements SceneTemplateInterface
             the foul flactor, you feel a warmth spreading through your veins as your muscles knit back together.
             Staggering some you are ready to be out of here.
             
-            You have been healed for {% if healAmount == 0 %}one point{% else %}{{ healAmount }} points!');
+            You have been healed for {% if Viewpoint.data.healAmount == 1 %}one point{% else %}{{ Viewpoint.data.healAmount }} points{% endif %}!');
         }
 
         return $context;

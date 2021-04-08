@@ -140,6 +140,12 @@ class ModuleTest extends ModuleTestCase
         $character->setGold(20000);
 
         $game->takeAction($action->getId());
+
+        $this->assertTrue(str_starts_with($v->getRenderedDescription(), "With a grimace"));
+        $this->assertTrue(str_contains($v->getRenderedDescription(), "You have been healed"));
+        $this->assertTrue(str_ends_with($v->getRenderedDescription(), "points!"));
+
+
         // Assert we are.
         $this->assertEquals($character->getMaxHealth(), $character->getHealth());
     }
