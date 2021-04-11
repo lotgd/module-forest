@@ -101,6 +101,7 @@ class Creature extends BasicEnemy
         $this->attack = $attack;
         $this->defense = $defense;
         $this->maxHealth = $maxHealth;
+        $this->health = $maxHealth;
         $this->experience = $experience;
         $this->gold = $gold;
         $this->bufflist = new BuffList(new ArrayCollection());
